@@ -47,6 +47,20 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // EduCA$H Brand Colors
+        educash: {
+          green: {
+            dark: "hsl(var(--educash-green-dark))",
+            base: "hsl(var(--educash-green-base))",
+          },
+          gold: "hsl(var(--educash-gold))",
+          slogan: "hsl(var(--educash-slogan))",
+        },
+        // Educational Status Colors  
+        success: "hsl(var(--success))",
+        warning: "hsl(var(--warning))",
+        danger: "hsl(var(--danger))",
+        info: "hsl(var(--info))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
