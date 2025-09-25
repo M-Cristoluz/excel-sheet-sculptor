@@ -52,10 +52,14 @@ All colors MUST be HSL.
     --danger: 4 90% 58%;
     --info: 207 90% 54%;
 
-    /* Gradients */
+/* Gradients */
     --gradient-educash: linear-gradient(135deg, hsl(155 100% 20%), hsl(155 65% 35%));
     --gradient-gold: linear-gradient(135deg, hsl(50 98% 68%), hsl(48 100% 50%));
     --gradient-hero: linear-gradient(135deg, hsl(155 100% 20%) 0%, hsl(155 65% 35%) 100%);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     
     /* Shadows */
     --shadow-educash: 0 10px 30px -10px hsl(155 65% 35% / 0.3);
@@ -131,5 +135,66 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    transition: var(--transition-smooth);
+  }
+  
+  /* Enhanced animations */
+  .animate-slideInUp {
+    animation: slideInUp 0.6s ease-out;
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  .animate-scaleIn {
+    animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .hover-glow {
+    transition: var(--transition-smooth);
+  }
+  
+  .hover-glow:hover {
+    filter: drop-shadow(0 0 20px hsl(var(--primary) / 0.5));
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Glass effect */
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .glass-effect {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 }

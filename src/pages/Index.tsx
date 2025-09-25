@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileUpload } from "@/components/FileUpload";
 import { DataTable } from "@/components/DataTable";
 import { DataCharts } from "@/components/DataCharts";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Table, Upload, BookOpen } from "lucide-react";
-import educashLogo from "@/assets/educash-logo.png";
+import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown } from "lucide-react";
+import EnhancedHeader from "@/components/EnhancedHeader";
+import StatCard from "@/components/StatCard";
+import TransactionForm from "@/components/TransactionForm";
 
 interface DataRow {
   id: number;
@@ -21,6 +23,31 @@ interface DataRow {
 const Index = () => {
   const [uploadedData, setUploadedData] = useState<DataRow[]>([]);
   const [hasData, setHasData] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  // Load dark mode preference
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('educash-dark-mode');
+    if (savedDarkMode) {
+      setIsDarkMode(JSON.parse(savedDarkMode));
+    }
+  }, []);
+
+  // Save dark mode preference and apply to document
+  useEffect(() => {
+    localStorage.setItem('educash-dark-mode', JSON.stringify(isDarkMode));
+    
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const handleFileUpload = (data: DataRow[]) => {
     setUploadedData(data);
@@ -34,33 +61,45 @@ const Index = () => {
   const resetData = () => {
     setUploadedData([]);
     setHasData(false);
+    setShowAddForm(false);
   };
 
+  const handleAddTransaction = (newTransaction: DataRow) => {
+    setUploadedData(prev => [...prev, newTransaction]);
+    if (!hasData) setHasData(true);
+  };
+
+  // Calculate summary statistics
+  const calculateSummary = () => {
+    if (!uploadedData.length) return null;
+    
+    const receitas = uploadedData.filter(item => item.tipo.toLowerCase().includes('receita')).reduce((sum, item) => sum + item.valor, 0);
+    const despesas = uploadedData.filter(item => item.tipo.toLowerCase().includes('despesa')).reduce((sum, item) => sum + item.valor, 0);
+    const saldo = receitas - despesas;
+    
+    return {
+      receitas,
+      despesas,
+      saldo,
+      totalTransactions: uploadedData.length
+    };
+  };
+
+  const summary = calculateSummary();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-educash-green-dark to-educash-green-base shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img 
-                src={educashLogo} 
-                alt="EduCA$H Logo" 
-                className="h-12 w-12 rounded-lg bg-white/10 p-1"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-white">EduCA$H</h1>
-                <p className="text-educash-slogan text-sm">MENTE RICA, FUTURO BRILHANTE.</p>
-              </div>
-            </div>
-            {hasData && (
-              <Button onClick={resetData} variant="outline" className="border-white/20 text-white hover:bg-white/10">
-                Nova Planilha
-              </Button>
-            )}
-          </div>
-        </div>
-      </header>
+    <div className={`min-h-screen transition-all duration-500 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+        : 'bg-gradient-to-br from-background to-muted/20'
+    }`}>
+      {/* Enhanced Header */}
+      <EnhancedHeader 
+        isDarkMode={isDarkMode}
+        toggleDarkMode={toggleDarkMode}
+        hasData={hasData}
+        resetData={resetData}
+      />
 
       <main className="container mx-auto px-4 py-8">
         {!hasData ? (
@@ -110,8 +149,45 @@ const Index = () => {
             <FileUpload onFileUpload={handleFileUpload} />
           </div>
         ) : (
-          /* Main Dashboard */
-          <div className="space-y-6">
+          /* Enhanced Dashboard */
+          <div className="space-y-6 animate-fadeIn">
+            {/* Summary Cards */}
+            {summary && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <StatCard
+                  title="Total de Transações"
+                  value={summary.totalTransactions}
+                  icon={BarChart3}
+                  color="primary"
+                  isDarkMode={isDarkMode}
+                />
+                <StatCard
+                  title="Receitas"
+                  value={`R$ ${summary.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+                  icon={TrendingUp}
+                  trend="up"
+                  color="success"
+                  isDarkMode={isDarkMode}
+                />
+                <StatCard
+                  title="Despesas"
+                  value={`R$ ${summary.despesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+                  icon={TrendingDown}
+                  trend="down"
+                  color="danger"
+                  isDarkMode={isDarkMode}
+                />
+                <StatCard
+                  title="Saldo"
+                  value={`R$ ${summary.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
+                  icon={DollarSign}
+                  trend={summary.saldo >= 0 ? 'up' : 'down'}
+                  color={summary.saldo >= 0 ? 'success' : 'danger'}
+                  isDarkMode={isDarkMode}
+                />
+              </div>
+            )}
+
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-foreground">Dashboard Financeiro</h2>
@@ -124,15 +200,31 @@ const Index = () => {
                   </Badge>
                 </div>
               </div>
+              <Button 
+                onClick={() => setShowAddForm(!showAddForm)}
+                className="hover:scale-105 transition-all duration-300"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Transação
+              </Button>
             </div>
 
+            {/* Transaction Form */}
+            {showAddForm && (
+              <TransactionForm
+                onAddTransaction={handleAddTransaction}
+                onClose={() => setShowAddForm(false)}
+                isDarkMode={isDarkMode}
+              />
+            )}
+
             <Tabs defaultValue="charts" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2 max-w-md">
-                <TabsTrigger value="charts" className="flex items-center gap-2">
+              <TabsList className={`grid w-full grid-cols-2 max-w-md ${isDarkMode ? 'glass-effect' : ''}`}>
+                <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
                   <BarChart3 className="h-4 w-4" />
                   Gráficos
                 </TabsTrigger>
-                <TabsTrigger value="table" className="flex items-center gap-2">
+                <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-300">
                   <Table className="h-4 w-4" />
                   Tabela
                 </TabsTrigger>
@@ -150,8 +242,10 @@ const Index = () => {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-secondary/50 border-t mt-16">
+      {/* Enhanced Footer */}
+      <footer className={`border-t mt-16 transition-all duration-500 ${
+        isDarkMode ? 'bg-gray-900/50 glass-effect' : 'bg-secondary/50'
+      }`}>
         <div className="container mx-auto px-4 py-6">
           <div className="text-center text-sm text-muted-foreground">
             <p>© 2025 EduCA$H - Sistema Educativo Financeiro</p>
