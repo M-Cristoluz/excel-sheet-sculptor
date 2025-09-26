@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'Inter', 'system-ui', 'sans-serif'],
+        ios: ['SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -61,6 +65,15 @@ export default {
         warning: "hsl(var(--warning))",
         danger: "hsl(var(--danger))",
         info: "hsl(var(--info))",
+        // Online Status Colors
+        online: {
+          light: "hsl(var(--online-light))",
+          dark: "hsl(var(--online-dark))",
+        },
+        offline: {
+          light: "hsl(var(--offline-light))",
+          dark: "hsl(var(--offline-dark))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
