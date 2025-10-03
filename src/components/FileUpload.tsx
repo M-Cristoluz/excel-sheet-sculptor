@@ -30,12 +30,15 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
       // Process the data to handle the Excel structure
       const processedData = processExcelData(jsonData);
       
-      onFileUpload(processedData);
+      // Categorize expenses with AI
+      const categorizedData = await categorizeExpensesWithAI(processedData);
+      
+      onFileUpload(categorizedData);
       setUploadedFile(file.name);
       
       toast({
         title: "✅ Upload realizado com sucesso!",
-        description: `Planilha ${file.name} carregada e processada.`,
+        description: `Planilha ${file.name} carregada e ${categorizedData.filter(d => d.categoria).length} despesas categorizadas automaticamente.`,
       });
     } catch (error) {
       console.error('Error processing file:', error);
@@ -47,6 +50,62 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const categorizeExpensesWithAI = async (data: any[]): Promise<any[]> => {
+    const categorizedData = [...data];
+    
+    // Process only expenses that don't have a category yet
+    const expensesToCategorize = categorizedData.filter(
+      item => item.tipo === 'Despesa' && !item.categoria && item.descricao
+    );
+
+    if (expensesToCategorize.length === 0) {
+      return categorizedData;
+    }
+
+    toast({
+      title: "🤖 Categorizando com IA...",
+      description: `Analisando ${expensesToCategorize.length} despesas...`,
+    });
+
+    // Categorize in parallel (up to 5 at a time to avoid rate limits)
+    const batchSize = 5;
+    for (let i = 0; i < expensesToCategorize.length; i += batchSize) {
+      const batch = expensesToCategorize.slice(i, i + batchSize);
+      
+      await Promise.all(
+        batch.map(async (item) => {
+          try {
+            const response = await fetch(
+              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/categorize-transaction`,
+              {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+                },
+                body: JSON.stringify({ descricao: item.descricao })
+              }
+            );
+
+            if (response.ok) {
+              const data = await response.json();
+              item.categoria = data.categoria;
+            }
+          } catch (error) {
+            console.log('Erro ao categorizar:', item.descricao, error);
+          }
+        })
+      );
+
+      // Small delay between batches
+      if (i + batchSize < expensesToCategorize.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+
+    return categorizedData;
   };
 
   const processExcelData = (rawData: any[]): any[] => {
@@ -77,15 +136,19 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
       // If no headers found, create default structure
       return rawData
         .filter((row, index) => index > 0 && row && row.length > 0)
-        .map((row, index) => ({
-          id: index + 1,
-          data: row[0] || '',
-          mes: row[1] || '',
-          ano: row[2] || new Date().getFullYear(),
-          tipo: row[3] || 'Despesa',
-          descricao: row[4] || '',
-          valor: parseFloat(row[5]) || 0,
-        }));
+        .map((row, index) => {
+          const date = row[0] ? new Date(row[0]) : new Date();
+          return {
+            id: index + 1,
+            data: row[0] || new Date().toISOString().split('T')[0],
+            mes: date.toLocaleDateString('pt-BR', { month: 'long' }),
+            ano: date.getFullYear(),
+            tipo: row[3] || 'Despesa',
+            descricao: row[4] || '',
+            valor: parseFloat(row[5]) || 0,
+            categoria: row[6] || undefined,
+          };
+        });
     }
 
     // Process data rows
@@ -93,14 +156,20 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     return dataRows
       .filter(row => row && row.length > 0 && row.some(cell => cell !== null && cell !== undefined && cell !== ''))
       .map((row, index) => {
-        const obj: any = { id: index + 1 };
+        const obj: any = { id: Date.now() + index };
         
         headers.forEach((header, colIndex) => {
           const value = row[colIndex];
           const lowerHeader = header.toLowerCase();
           
           if (lowerHeader.includes('data')) {
-            obj.data = value || '';
+            const dateValue = value || new Date().toISOString().split('T')[0];
+            obj.data = dateValue;
+            
+            // Extract month and year from date
+            const date = new Date(dateValue);
+            obj.mes = date.toLocaleDateString('pt-BR', { month: 'long' });
+            obj.ano = date.getFullYear();
           } else if (lowerHeader.includes('mês') || lowerHeader.includes('mes')) {
             obj.mes = value || '';
           } else if (lowerHeader.includes('ano')) {
@@ -111,10 +180,23 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
             obj.descricao = value || '';
           } else if (lowerHeader.includes('valor')) {
             obj.valor = typeof value === 'number' ? value : parseFloat(String(value).replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
+          } else if (lowerHeader.includes('categoria')) {
+            const cat = String(value).trim();
+            if (cat === 'Essencial' || cat === 'Desejo' || cat === 'Poupança') {
+              obj.categoria = cat;
+            }
           } else {
             obj[header.toLowerCase()] = value;
           }
         });
+
+        // Ensure required fields exist
+        if (!obj.data) obj.data = new Date().toISOString().split('T')[0];
+        if (!obj.mes) {
+          const date = new Date(obj.data);
+          obj.mes = date.toLocaleDateString('pt-BR', { month: 'long' });
+        }
+        if (!obj.ano) obj.ano = new Date().getFullYear();
 
         return obj;
       });

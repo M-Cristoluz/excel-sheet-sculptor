@@ -17,7 +17,14 @@ interface SalaryConfigProps {
 const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncomeUpdate, isDarkMode }: SalaryConfigProps) => {
   const [salary, setSalary] = useState(currentSalary.toString());
   const [extra, setExtra] = useState(extraIncome.toString());
+  const [isEditing, setIsEditing] = useState(false);
   const { toast } = useToast();
+
+  // Update local state when props change
+  useState(() => {
+    setSalary(currentSalary.toString());
+    setExtra(extraIncome.toString());
+  });
 
   const handleSave = () => {
     const numericSalary = parseFloat(salary.replace(/[^\d.,]/g, '').replace(',', '.'));
@@ -34,9 +41,22 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
 
     onSalaryUpdate(numericSalary);
     onExtraIncomeUpdate(numericExtra);
+    setIsEditing(false);
+    
     toast({
-      title: "Configuração salva!",
+      title: "✅ Configuração salva!",
       description: `Salário base: ${formatCurrency(numericSalary)}${numericExtra > 0 ? ` | Renda extra: ${formatCurrency(numericExtra)}` : ''}`,
+      variant: "default",
+    });
+  };
+
+  const handleQuickUpdateExtra = () => {
+    const numericExtra = parseFloat(extra.replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+    onExtraIncomeUpdate(numericExtra);
+    
+    toast({
+      title: "✅ Renda extra atualizada!",
+      description: `Valor: ${formatCurrency(numericExtra)}`,
       variant: "default",
     });
   };
@@ -89,23 +109,47 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
           </div>
 
           <div className="space-y-3">
-            <Label htmlFor="extra" className="text-sm font-medium font-ios">
-              ✨ Renda Extra Mensal (R$)
-            </Label>
-            <Input
-              id="extra"
-              type="text"
-              value={extra}
-              onChange={(e) => {
-                const value = e.target.value;
-                const sanitized = value.replace(/[^\d.,]/g, '');
-                setExtra(sanitized);
-              }}
-              placeholder="Ex: 1000.00"
-              className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
-            />
+            <div className="flex items-center justify-between">
+              <Label htmlFor="extra" className="text-sm font-medium font-ios">
+                ✨ Renda Extra Mensal (R$)
+              </Label>
+              {extraIncome > 0 && !isEditing && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsEditing(true)}
+                  className="text-xs h-7 px-2"
+                >
+                  Editar
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Input
+                id="extra"
+                type="text"
+                value={extra}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const sanitized = value.replace(/[^\d.,]/g, '');
+                  setExtra(sanitized);
+                }}
+                placeholder="Ex: 1000.00"
+                className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
+              />
+              {isEditing && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleQuickUpdateExtra}
+                  className="shrink-0"
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Renda adicional (freelances, bicos, etc.) - não afeta regra 50/30/20
+              💡 Renda adicional (freelances, bicos) - não afeta a regra 50/30/20, mas conta no saldo total
             </p>
           </div>
         </div>
