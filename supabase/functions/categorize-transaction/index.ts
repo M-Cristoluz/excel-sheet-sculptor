@@ -12,9 +12,12 @@ serve(async (req) => {
 
   try {
     const { descricao } = await req.json();
+    console.log('📝 Categorizando:', descricao);
+    
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
+      console.error('❌ LOVABLE_API_KEY não configurada');
       throw new Error('LOVABLE_API_KEY não configurada');
     }
 
@@ -36,12 +39,13 @@ serve(async (req) => {
 **Essencial (50%)** - Necessidades básicas e obrigatórias:
 - Moradia: aluguel, condomínio, IPTU, reforma essencial
 - Alimentação básica: supermercado, feira, açougue, padaria
-- Transporte: gasolina, transporte público, manutenção do carro, seguro
+- Transporte: gasolina, combustível, condução, transporte público, manutenção do carro, seguro
 - Saúde: plano de saúde, médico, dentista, farmácia, exames
 - Contas básicas: luz, água, gás, internet, telefone
-- Educação obrigatória: escola, faculdade, material escolar
+- Educação obrigatória: escola, faculdade, material escolar, ESPRO
 - Impostos e seguros obrigatórios
 - Produtos de higiene e limpeza básicos
+- Dízimos e obrigações religiosas
 
 **Desejo (30%)** - Lazer e qualidade de vida:
 - Restaurantes, delivery, fast food, lanchonetes, cafés
@@ -53,6 +57,7 @@ serve(async (req) => {
 - Salão de beleza, spa, estética
 - Presentes, festas
 - Upgrade de produtos (melhor marca/versão que o necessário)
+- Cartão de crédito usado para compras não essenciais
 
 **Poupança (20%)** - Investimentos e reservas:
 - Investimentos (CDB, ações, fundos, tesouro)
@@ -63,8 +68,11 @@ serve(async (req) => {
 
 **IMPORTANTE:**
 - Analise o contexto da descrição
-- Considere que "mercado" é Essencial, mas "mercado de doces" pode ser Desejo
-- "Farmácia" pode ser Essencial (remédio) ou Desejo (cosméticos)
+- "Condução" é SEMPRE transporte essencial
+- "Dízimos" é SEMPRE essencial (compromisso religioso)
+- "Cartão" geralmente é para compras diversas (analisar contexto)
+- "ESPRO" é educação essencial
+- "Investimento" é SEMPRE poupança
 - Seja consistente e use bom senso
 
 Responda APENAS com uma das três palavras: "Essencial", "Desejo" ou "Poupança".`
@@ -79,6 +87,8 @@ Responda APENAS com uma das três palavras: "Essencial", "Desejo" ou "Poupança"
     });
 
     if (!response.ok) {
+      console.error('❌ Erro na API:', response.status, await response.text());
+      
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: 'Limite de requisições excedido. Tente novamente mais tarde.' }),
@@ -101,13 +111,15 @@ Responda APENAS com uma das três palavras: "Essencial", "Desejo" ou "Poupança"
     const categoriasValidas = ['Essencial', 'Desejo', 'Poupança'];
     const categoriaFinal = categoriasValidas.includes(categoria) ? categoria : 'Desejo';
 
+    console.log('✅ Resultado:', descricao, '→', categoriaFinal);
+
     return new Response(
       JSON.stringify({ categoria: categoriaFinal }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 
   } catch (error) {
-    console.error('Erro ao categorizar transação:', error);
+    console.error('❌ Erro ao categorizar transação:', error);
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
     return new Response(
       JSON.stringify({ error: errorMessage }),
