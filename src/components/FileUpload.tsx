@@ -57,7 +57,7 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     
     // Process only expenses that don't have a category yet
     const expensesToCategorize = categorizedData.filter(
-      item => item.tipo === 'Despesa' && !item.categoria && item.descricao
+      item => (item.tipo === 'Despesa' || item.tipo === 'Saída') && !item.categoria && item.descricao
     );
 
     if (expensesToCategorize.length === 0) {
@@ -175,11 +175,18 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
           } else if (lowerHeader.includes('ano')) {
             obj.ano = value || new Date().getFullYear();
           } else if (lowerHeader.includes('tipo')) {
-            obj.tipo = value || 'Despesa';
+            // Converter "Entrada" para "Receita" e "Saída" para "Despesa"
+            let tipo = value || 'Despesa';
+            if (tipo === 'Entrada') tipo = 'Receita';
+            if (tipo === 'Saída') tipo = 'Despesa';
+            obj.tipo = tipo;
           } else if (lowerHeader.includes('descrição') || lowerHeader.includes('descricao')) {
             obj.descricao = value || '';
           } else if (lowerHeader.includes('valor')) {
-            obj.valor = typeof value === 'number' ? value : parseFloat(String(value).replace(/[^\d,-]/g, '').replace(',', '.')) || 0;
+            // Melhor tratamento de valores com R$
+            const valorStr = String(value || '0');
+            const numeroLimpo = valorStr.replace(/[^\d,.-]/g, '').replace(',', '.');
+            obj.valor = parseFloat(numeroLimpo) || 0;
           } else if (lowerHeader.includes('categoria')) {
             const cat = String(value).trim();
             if (cat === 'Essencial' || cat === 'Desejo' || cat === 'Poupança') {
