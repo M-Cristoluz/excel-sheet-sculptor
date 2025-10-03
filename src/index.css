@@ -64,19 +64,28 @@ All colors MUST be HSL.
     --gradient-hero: linear-gradient(135deg, hsl(155 100% 20%) 0%, hsl(155 65% 35%) 100%);
     
     /* Glassmorphism Variables */
-    --glass-bg: rgba(255, 255, 255, 0.2);
-    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
     --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 
-    /* Animations */
+    /* iOS-style Animations */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     
-    /* Shadows */
+    /* iOS-style Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.18);
     --shadow-educash: 0 10px 30px -10px hsl(155 65% 35% / 0.3);
     --shadow-gold: 0 5px 20px -5px hsl(50 98% 68% / 0.4);
 
-    --radius: 0.625rem;
+    /* iOS-style Border Radius */
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-2xl: 1.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -125,9 +134,15 @@ All colors MUST be HSL.
     --offline-dark: 0 0% 45%;
 
     /* Glassmorphism Variables - Dark Mode */
-    --glass-bg: rgba(15, 23, 42, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    --glass-bg: rgba(15, 23, 42, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+
+    /* iOS-style Dark Mode Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.6);
 
     /* Update gradients for dark mode */
     --gradient-educash: linear-gradient(135deg, hsl(155 100% 15%), hsl(155 65% 35%));
@@ -236,27 +251,62 @@ All colors MUST be HSL.
     }
   }
   
-  /* Enhanced Glassmorphism */
+  /* Enhanced iOS-style Glassmorphism */
   .glass-effect {
     background: var(--glass-bg);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
   }
 
   .glass-card {
     @apply glass-effect;
-    transition: var(--transition-smooth);
+    transition: var(--transition-spring);
+    border-radius: var(--radius-xl);
   }
 
   .glass-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .glass-card:active {
     transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+    transition: var(--transition-smooth);
   }
 
   .dark .glass-card:hover {
-    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+    box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.7);
+  }
+
+  /* iOS-style Button Base */
+  .ios-button {
+    @apply rounded-xl font-semibold tracking-tight;
+    transition: var(--transition-spring);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ios-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .ios-button:active {
+    transform: scale(0.98);
+    transition: all 0.1s ease;
+  }
+
+  /* iOS-style Card */
+  .ios-card {
+    @apply rounded-2xl;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-spring);
+  }
+
+  .ios-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
   }
 
   /* Glow Effects */

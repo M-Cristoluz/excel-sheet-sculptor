@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { FileUpload } from "@/components/FileUpload";
 import { DataTable } from "@/components/DataTable";
 import { DataCharts } from "@/components/DataCharts";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown } from "lucide-react";
+import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles } from "lucide-react";
 import EnhancedHeader from "@/components/EnhancedHeader";
 import StatCard from "@/components/StatCard";
 import TransactionForm from "@/components/TransactionForm";
@@ -13,6 +12,8 @@ import SalaryConfig from "@/components/SalaryConfig";
 import FinancialRuleCard from "@/components/FinancialRuleCard";
 import GamificationPanel from "@/components/GamificationPanel";
 import EducationalTips from "@/components/EducationalTips";
+import IOSButton from "@/components/IOSButton";
+import IOSCard from "@/components/IOSCard";
 
 interface DataRow {
   id: number;
@@ -136,49 +137,59 @@ const Index = () => {
         resetData={resetData}
       />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 max-w-7xl">
         {!hasData ? (
-          /* Upload Section */
-          <div className="space-y-8">
-            <div className="text-center space-y-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border border-accent/20 rounded-full">
-                <BookOpen className="h-4 w-4 text-accent-foreground" />
-                <span className="text-sm font-medium text-accent-foreground">Sistema Educativo Financeiro</span>
+          /* iOS-style Upload Section */
+          <div className="space-y-10 animate-fadeIn">
+            <div className="text-center space-y-6">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20 rounded-full backdrop-blur-sm shadow-lg">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-sm font-bold text-foreground font-ios">Sistema Educativo Financeiro</span>
               </div>
-              <h2 className="text-3xl font-bold text-foreground">
+              
+              <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight font-ios">
                 Transforme suas planilhas em{" "}
-                <span className="text-transparent bg-gradient-to-r from-educash-green-base to-educash-gold bg-clip-text">
+                <span className="text-transparent bg-gradient-to-r from-educash-green-base via-primary to-educash-gold bg-clip-text animate-pulse">
                   conhecimento financeiro
                 </span>
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              </h1>
+              
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-ios">
                 Faça o upload da sua planilha Excel e visualize seus dados financeiros com gráficos interativos,
                 edite informações diretamente na interface e aprenda com dicas educativas personalizadas.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="text-center p-6 bg-card border rounded-lg">
-                <Upload className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">1. Upload Excel</h3>
-                <p className="text-sm text-muted-foreground">
+              <IOSCard variant="elevated" hoverable className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Upload className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 font-ios">1. Upload Excel</h3>
+                <p className="text-sm text-muted-foreground font-ios">
                   Carregue sua planilha financeira (.xlsx ou .xls)
                 </p>
-              </div>
-              <div className="text-center p-6 bg-card border rounded-lg">
-                <BarChart3 className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">2. Visualize Dados</h3>
-                <p className="text-sm text-muted-foreground">
+              </IOSCard>
+              
+              <IOSCard variant="elevated" hoverable className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-success to-success/70 rounded-2xl flex items-center justify-center shadow-lg">
+                  <BarChart3 className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 font-ios">2. Visualize Dados</h3>
+                <p className="text-sm text-muted-foreground font-ios">
                   Analise com gráficos interativos e dashboards
                 </p>
-              </div>
-              <div className="text-center p-6 bg-card border rounded-lg">
-                <Table className="h-12 w-12 text-primary mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">3. Edite Online</h3>
-                <p className="text-sm text-muted-foreground">
+              </IOSCard>
+              
+              <IOSCard variant="elevated" hoverable className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-warning to-warning/70 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Table className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 font-ios">3. Edite Online</h3>
+                <p className="text-sm text-muted-foreground font-ios">
                   Modifique dados diretamente pela interface
                 </p>
-              </div>
+              </IOSCard>
             </div>
 
             <FileUpload onFileUpload={handleFileUpload} />
@@ -256,25 +267,33 @@ const Index = () => {
               </div>
             )}
 
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Dashboard Financeiro</h2>
-                <div className="flex items-center gap-2 mt-2">
-                  <Badge variant="default" className="bg-success text-white">
-                    {uploadedData.length} transações carregadas
+                <h2 className="text-3xl font-bold text-foreground font-ios">Dashboard Financeiro</h2>
+                <div className="flex flex-wrap items-center gap-2 mt-3">
+                  <Badge 
+                    variant="default" 
+                    className="bg-gradient-to-r from-success to-success/80 text-white px-4 py-1.5 rounded-full shadow-lg"
+                  >
+                    ✓ {uploadedData.length} transações carregadas
                   </Badge>
-                  <Badge variant="outline">
-                    Dados atualizados em tempo real
+                  <Badge 
+                    variant="outline" 
+                    className="border-2 border-info/30 text-info px-4 py-1.5 rounded-full backdrop-blur-sm"
+                  >
+                    🔄 Dados em tempo real
                   </Badge>
                 </div>
               </div>
-              <Button 
+              
+              <IOSButton
+                variant="primary"
+                size="lg"
                 onClick={() => setShowAddForm(!showAddForm)}
-                className="hover:scale-105 transition-all duration-300"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-5 w-5" />
                 Nova Transação
-              </Button>
+              </IOSButton>
             </div>
 
             {/* Transaction Form */}
