@@ -27,20 +27,33 @@ const StatCard = ({ title, value, change, icon: Icon, trend = 'neutral', color =
   };
 
   return (
-    <Card className={`hover:scale-105 transition-all duration-300 animate-scaleIn ${
-      isDarkMode ? 'glass-effect' : 'hover:shadow-lg'
+    <Card className={`glass-card hover-glow animate-scaleIn border-2 ${
+      isDarkMode 
+        ? 'border-primary/20 hover:border-primary/40' 
+        : 'border-primary/10 hover:border-primary/30'
+    } ${
+      trend === 'up' && 'glow-green'
     }`}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           {title}
         </CardTitle>
-        <Icon className={`h-5 w-5 text-${color}`} />
+        <div className={`p-2 rounded-lg ${
+          isDarkMode 
+            ? 'bg-primary/20' 
+            : 'bg-primary/10'
+        }`}>
+          <Icon className={`h-6 w-6 text-${color}`} />
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold text-foreground">{value}</div>
+        <div className="text-3xl font-bold text-foreground font-ios">{value}</div>
         {change !== undefined && (
-          <Badge variant="secondary" className={`mt-2 ${getTrendColor()}`}>
-            {getChangePrefix()}{change}%
+          <Badge 
+            variant={trend === 'up' ? 'default' : trend === 'down' ? 'destructive' : 'secondary'} 
+            className={`mt-3 font-semibold ${getTrendColor()}`}
+          >
+            {getChangePrefix()}{change.toFixed(1)}%
           </Badge>
         )}
       </CardContent>

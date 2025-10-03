@@ -25,30 +25,30 @@ const DarkModeToggle = ({ isDarkMode, toggleDarkMode }: DarkModeToggleProps) => 
 
   return (
     <div className="flex items-center gap-2">
-      {/* Online Status Indicator */}
-      <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium font-ios transition-all duration-300 ${
+      {/* Online Status Indicator with Glow */}
+      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold font-ios transition-all duration-300 ${
         isOnline 
           ? isDarkMode 
-            ? 'bg-online-dark/20 text-online-dark border border-online-dark/30' 
-            : 'bg-online-light/20 text-online-light border border-online-light/30'
+            ? 'bg-online-dark/20 text-online-light border border-online-dark/40 glow-online' 
+            : 'bg-online-light/20 text-online-dark border border-online-light/40 glow-online'
           : isDarkMode
-            ? 'bg-offline-dark/20 text-offline-dark border border-offline-dark/30'
-            : 'bg-offline-light/20 text-offline-light border border-offline-light/30'
+            ? 'bg-offline-dark/20 text-offline-light border border-offline-dark/40'
+            : 'bg-offline-light/20 text-offline-dark border border-offline-light/40'
       }`}>
         {isOnline ? (
           <>
-            <Wifi className="h-3 w-3" />
+            <Wifi className="h-3.5 w-3.5 animate-pulse" />
             <span>Online</span>
           </>
         ) : (
           <>
-            <WifiOff className="h-3 w-3" />
+            <WifiOff className="h-3.5 w-3.5" />
             <span>Offline</span>
           </>
         )}
       </div>
 
-      {/* Dark Mode Toggle */}
+      {/* Dark Mode Toggle with Enhanced Animation */}
       <Button
         onClick={toggleDarkMode}
         variant="glass"

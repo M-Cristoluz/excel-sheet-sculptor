@@ -52,71 +52,86 @@ All colors MUST be HSL.
     --danger: 4 90% 58%;
     --info: 207 90% 54%;
 
-/* Gradients */
+    /* Online/Offline Status - Light */
+    --online-light: 142 76% 36%;
+    --online-dark: 142 76% 28%;
+    --offline-light: 0 0% 50%;
+    --offline-dark: 0 0% 35%;
+
+    /* Gradients */
     --gradient-educash: linear-gradient(135deg, hsl(155 100% 20%), hsl(155 65% 35%));
     --gradient-gold: linear-gradient(135deg, hsl(50 98% 68%), hsl(48 100% 50%));
     --gradient-hero: linear-gradient(135deg, hsl(155 100% 20%) 0%, hsl(155 65% 35%) 100%);
     
+    /* Glassmorphism Variables */
+    --glass-bg: rgba(255, 255, 255, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
     /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     
     /* Shadows */
     --shadow-educash: 0 10px 30px -10px hsl(155 65% 35% / 0.3);
     --shadow-gold: 0 5px 20px -5px hsl(50 98% 68% / 0.4);
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
     /* EduCA$H Dark Mode */
-    --background: 155 100% 8%;
-    --foreground: 155 15% 95%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 155 80% 12%;
-    --card-foreground: 155 15% 95%;
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 155 80% 12%;
-    --popover-foreground: 155 15% 95%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 155 65% 45%;
-    --primary-foreground: 155 100% 8%;
+    --primary: 155 70% 50%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 155 40% 25%;
-    --secondary-foreground: 155 15% 95%;
+    --secondary: 217 32% 20%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 155 40% 15%;
-    --muted-foreground: 155 20% 70%;
+    --muted: 217 32% 18%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 50 98% 68%;
-    --accent-foreground: 155 100% 8%;
+    --accent: 50 95% 60%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 75% 50%;
-    --destructive-foreground: 155 15% 95%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 155 40% 20%;
-    --input: 155 40% 18%;
-    --ring: 155 65% 45%;
+    --border: 217 32% 20%;
+    --input: 217 32% 18%;
+    --ring: 155 70% 50%;
+
+    /* Online/Offline Status - Dark */
+    --online-light: 142 70% 50%;
+    --online-dark: 142 80% 40%;
+    --offline-light: 0 0% 60%;
+    --offline-dark: 0 0% 45%;
+
+    /* Glassmorphism Variables - Dark Mode */
+    --glass-bg: rgba(15, 23, 42, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 
     /* Update gradients for dark mode */
-    --gradient-educash: linear-gradient(135deg, hsl(155 100% 15%), hsl(155 65% 30%));
-    --gradient-hero: linear-gradient(135deg, hsl(155 100% 15%) 0%, hsl(155 65% 30%) 100%);
+    --gradient-educash: linear-gradient(135deg, hsl(155 100% 15%), hsl(155 65% 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(217 32% 20%) 100%);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -130,12 +145,47 @@ All colors MUST be HSL.
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-ios;
+    min-height: 100vh;
     transition: var(--transition-smooth);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-secondary/20;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/40;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/60;
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-secondary/10;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
   }
   
   /* Enhanced animations */
@@ -186,15 +236,51 @@ All colors MUST be HSL.
     }
   }
   
-  /* Glass effect */
+  /* Enhanced Glassmorphism */
   .glass-effect {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
   }
-  
-  .dark .glass-effect {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+
+  .glass-card {
+    @apply glass-effect;
+    transition: var(--transition-smooth);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+  }
+
+  .dark .glass-card:hover {
+    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+  }
+
+  /* Glow Effects */
+  .glow-green {
+    box-shadow: 0 0 20px hsl(var(--educash-green-base) / 0.4);
+  }
+
+  .dark .glow-green {
+    box-shadow: 0 0 30px hsl(var(--educash-green-base) / 0.6);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 20px hsl(var(--educash-gold) / 0.4);
+  }
+
+  .dark .glow-gold {
+    box-shadow: 0 0 30px hsl(var(--educash-gold) / 0.6);
+  }
+
+  .glow-online {
+    box-shadow: 0 0 15px hsl(var(--online-light) / 0.5);
+  }
+
+  .dark .glow-online {
+    box-shadow: 0 0 20px hsl(var(--online-light) / 0.7);
   }
 }

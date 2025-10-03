@@ -29,54 +29,56 @@ const EnhancedHeader = ({ isDarkMode, toggleDarkMode, hasData, resetData }: Enha
   }, []);
 
   return (
-    <header className={`${
-      isDarkMode
-        ? 'bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900'
-        : 'bg-gradient-to-r from-educash-green-dark to-educash-green-base'
-    } shadow-2xl relative overflow-hidden transition-all duration-500`}>
-      {/* Animated background effect */}
+    <header className={`glass-effect shadow-2xl relative overflow-hidden transition-all duration-500 border-b-2 ${
+      isDarkMode 
+        ? 'border-primary/30 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900' 
+        : 'border-primary/20 bg-gradient-to-r from-educash-green-dark to-educash-green-base'
+    }`}>
+      {/* Animated background effect with enhanced glassmorphism */}
       <div className={`absolute inset-0 ${
         isDarkMode
-          ? 'bg-gradient-to-r from-transparent via-blue-500/5 to-transparent'
+          ? 'bg-gradient-to-r from-transparent via-primary/10 to-transparent'
           : 'bg-gradient-to-r from-transparent via-white/10 to-transparent'
       } animate-pulse`}></div>
 
       <div className="container mx-auto px-4 py-6 relative z-10">
         <div className="flex items-center justify-between animate-slideInUp">
           <div className="flex items-center gap-4">
-            <div className="relative">
+            <div className="relative glow-gold">
               <img 
                 src={educashLogo} 
                 alt="EduCA$H Logo" 
-                className="h-16 w-16 rounded-lg bg-white/10 p-2 hover-glow transition-all duration-500 hover:scale-110"
+                className="h-16 w-16 rounded-xl bg-white/10 p-2 hover-glow transition-all duration-500 hover:scale-110 backdrop-blur-sm"
               />
-              {/* Halo effect */}
+              {/* Enhanced Halo effect */}
               <div className={`absolute inset-0 ${
                 isDarkMode
-                  ? 'bg-gradient-to-r from-blue-400/20 to-purple-400/20'
-                  : 'bg-gradient-to-r from-yellow-400/20 to-green-400/20'
-              } rounded-full blur-xl -z-10`}></div>
+                  ? 'bg-gradient-to-r from-primary/30 to-accent/30'
+                  : 'bg-gradient-to-r from-accent/30 to-primary/30'
+              } rounded-full blur-2xl -z-10 animate-pulse`}></div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">EduCA$H</h1>
-              <p className="text-educash-slogan text-sm">MENTE RICA, FUTURO BRILHANTE.</p>
+              <h1 className={`text-3xl font-bold font-ios ${
+                isDarkMode ? 'text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'text-white'
+              }`}>
+                EduCA$H
+              </h1>
+              <p className={`text-sm font-medium tracking-wide ${
+                isDarkMode ? 'text-accent' : 'text-educash-slogan'
+              }`}>
+                MENTE RICA, FUTURO BRILHANTE.
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <DarkModeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
-            
-            {/* Connection status */}
-            <Badge variant={isOnline ? "default" : "destructive"} className="glass-effect">
-              {isOnline ? <Wifi className="h-3 w-3 mr-1" /> : <WifiOff className="h-3 w-3 mr-1" />}
-              {isOnline ? 'Online' : 'Offline'}
-            </Badge>
 
             {hasData && (
               <Button 
                 onClick={resetData} 
-                variant="outline" 
-                className="border-white/20 text-white hover:bg-white/10 glass-effect hover:scale-105 transition-all duration-300"
+                variant="glass" 
+                className="border-white/30 text-white hover:bg-white/20 hover:scale-105 transition-all duration-300 font-semibold shadow-lg"
               >
                 Nova Planilha
               </Button>
