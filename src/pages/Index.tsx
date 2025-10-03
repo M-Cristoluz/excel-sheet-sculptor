@@ -9,6 +9,10 @@ import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, Trend
 import EnhancedHeader from "@/components/EnhancedHeader";
 import StatCard from "@/components/StatCard";
 import TransactionForm from "@/components/TransactionForm";
+import SalaryConfig from "@/components/SalaryConfig";
+import FinancialRuleCard from "@/components/FinancialRuleCard";
+import GamificationPanel from "@/components/GamificationPanel";
+import EducationalTips from "@/components/EducationalTips";
 
 interface DataRow {
   id: number;
@@ -25,16 +29,27 @@ const Index = () => {
   const [hasData, setHasData] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [salary, setSalary] = useState<number>(0);
+  const [consecutiveDaysOnBudget, setConsecutiveDaysOnBudget] = useState(0);
 
-  // Load dark mode preference
+  // Load preferences
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('educash-dark-mode');
+    const savedSalary = localStorage.getItem('educash-salary');
+    const savedDays = localStorage.getItem('educash-consecutive-days');
+    
     if (savedDarkMode) {
       setIsDarkMode(JSON.parse(savedDarkMode));
     }
+    if (savedSalary) {
+      setSalary(parseFloat(savedSalary));
+    }
+    if (savedDays) {
+      setConsecutiveDaysOnBudget(parseInt(savedDays));
+    }
   }, []);
 
-  // Save dark mode preference and apply to document
+  // Save preferences
   useEffect(() => {
     localStorage.setItem('educash-dark-mode', JSON.stringify(isDarkMode));
     
@@ -44,6 +59,16 @@ const Index = () => {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    if (salary > 0) {
+      localStorage.setItem('educash-salary', salary.toString());
+    }
+  }, [salary]);
+
+  useEffect(() => {
+    localStorage.setItem('educash-consecutive-days', consecutiveDaysOnBudget.toString());
+  }, [consecutiveDaysOnBudget]);
 
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode);
@@ -67,6 +92,16 @@ const Index = () => {
   const handleAddTransaction = (newTransaction: DataRow) => {
     setUploadedData(prev => [...prev, newTransaction]);
     if (!hasData) setHasData(true);
+    
+    // Check if user stayed within budget and increment days
+    const totalExpenses = calculateSummary()?.despesas || 0;
+    if (salary > 0 && totalExpenses < salary * 0.9) {
+      setConsecutiveDaysOnBudget(prev => prev + 1);
+    }
+  };
+
+  const handleSalaryUpdate = (newSalary: number) => {
+    setSalary(newSalary);
   };
 
   // Calculate summary statistics
@@ -151,6 +186,22 @@ const Index = () => {
         ) : (
           /* Enhanced Dashboard */
           <div className="space-y-6 animate-fadeIn">
+            {/* Salary Configuration */}
+            <SalaryConfig 
+              onSalaryUpdate={handleSalaryUpdate}
+              currentSalary={salary}
+              isDarkMode={isDarkMode}
+            />
+
+            {/* Educational Tips */}
+            {salary > 0 && summary && (
+              <EducationalTips 
+                expenses={summary.despesas}
+                salary={salary}
+                isDarkMode={isDarkMode}
+              />
+            )}
+
             {/* Summary Cards */}
             {summary && (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -183,6 +234,23 @@ const Index = () => {
                   icon={DollarSign}
                   trend={summary.saldo >= 0 ? 'up' : 'down'}
                   color={summary.saldo >= 0 ? 'success' : 'danger'}
+                  isDarkMode={isDarkMode}
+                />
+              </div>
+            )}
+
+            {/* Financial Education Cards */}
+            {salary > 0 && summary && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <FinancialRuleCard 
+                  salary={salary}
+                  expenses={summary.despesas}
+                  isDarkMode={isDarkMode}
+                />
+                <GamificationPanel 
+                  totalTransactions={summary.totalTransactions}
+                  consecutiveDaysOnBudget={consecutiveDaysOnBudget}
+                  totalSaved={summary.saldo}
                   isDarkMode={isDarkMode}
                 />
               </div>

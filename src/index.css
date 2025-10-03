@@ -40,11 +40,11 @@ All colors MUST be HSL.
     --input: 155 20% 90%;
     --ring: 155 65% 35%;
 
-    /* EduCA$H Custom Colors */
-    --educash-green-dark: 155 100% 20%;
-    --educash-green-base: 155 65% 35%;
-    --educash-gold: 50 98% 68%;
-    --educash-slogan: 0 0% 90%;
+    /* EduCA$H Brand Colors - Exact specification from PDF */
+    --educash-green-dark: 158 100% 20%; /* #00653A */
+    --educash-green-base: 150 55% 42%;  /* #209058 */
+    --educash-gold: 48 99% 68%;         /* #FEE15F */
+    --educash-slogan: 0 0% 90%;         /* #E5E5E5 */
     
     /* Educational Colors */
     --success: 122 39% 49%;
