@@ -8,16 +8,21 @@ import { useToast } from "@/hooks/use-toast";
 
 interface SalaryConfigProps {
   currentSalary: number;
+  extraIncome: number;
   onSalaryUpdate: (salary: number) => void;
+  onExtraIncomeUpdate: (income: number) => void;
   isDarkMode?: boolean;
 }
 
-const SalaryConfig = ({ currentSalary, onSalaryUpdate, isDarkMode }: SalaryConfigProps) => {
+const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncomeUpdate, isDarkMode }: SalaryConfigProps) => {
   const [salary, setSalary] = useState(currentSalary.toString());
+  const [extra, setExtra] = useState(extraIncome.toString());
   const { toast } = useToast();
 
   const handleSave = () => {
     const numericSalary = parseFloat(salary.replace(/[^\d.,]/g, '').replace(',', '.'));
+    const numericExtra = parseFloat(extra.replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
+    
     if (isNaN(numericSalary) || numericSalary <= 0) {
       toast({
         title: "Erro",
@@ -28,9 +33,10 @@ const SalaryConfig = ({ currentSalary, onSalaryUpdate, isDarkMode }: SalaryConfi
     }
 
     onSalaryUpdate(numericSalary);
+    onExtraIncomeUpdate(numericExtra);
     toast({
-      title: "Salário configurado!",
-      description: `Novo salário base: ${formatCurrency(numericSalary)}`,
+      title: "Configuração salva!",
+      description: `Salário base: ${formatCurrency(numericSalary)}${numericExtra > 0 ? ` | Renda extra: ${formatCurrency(numericExtra)}` : ''}`,
       variant: "default",
     });
   };
@@ -64,11 +70,11 @@ const SalaryConfig = ({ currentSalary, onSalaryUpdate, isDarkMode }: SalaryConfi
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <Label htmlFor="salary" className="text-sm font-medium font-ios">
-            Salário Mensal (R$)
-          </Label>
-          <div className="flex gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <Label htmlFor="salary" className="text-sm font-medium font-ios">
+              💼 Salário Base Mensal (R$)
+            </Label>
             <Input
               id="salary"
               type="text"
@@ -77,17 +83,42 @@ const SalaryConfig = ({ currentSalary, onSalaryUpdate, isDarkMode }: SalaryConfi
               placeholder="Ex: 5000.00"
               className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
             />
-            <Button 
-              onClick={handleSave}
-              variant="default"
-              size="default"
-              className="shrink-0"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Salvar
-            </Button>
+            <p className="text-xs text-muted-foreground">
+              Seu salário fixo mensal (usado para cálculo 50/30/20)
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <Label htmlFor="extra" className="text-sm font-medium font-ios">
+              ✨ Renda Extra Mensal (R$)
+            </Label>
+            <Input
+              id="extra"
+              type="text"
+              value={extra}
+              onChange={(e) => {
+                const value = e.target.value;
+                const sanitized = value.replace(/[^\d.,]/g, '');
+                setExtra(sanitized);
+              }}
+              placeholder="Ex: 1000.00"
+              className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
+            />
+            <p className="text-xs text-muted-foreground">
+              Renda adicional (freelances, bicos, etc.) - não afeta regra 50/30/20
+            </p>
           </div>
         </div>
+
+        <Button 
+          onClick={handleSave}
+          variant="default"
+          size="lg"
+          className="w-full"
+        >
+          <Save className="h-4 w-4 mr-2" />
+          Salvar Configuração
+        </Button>
 
         {currentSalary > 0 && (
           <div className="space-y-4 p-4 bg-primary/5 rounded-xl border border-primary/10">

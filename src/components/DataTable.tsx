@@ -16,6 +16,7 @@ interface DataRow {
   tipo: string;
   descricao: string;
   valor: number;
+  categoria?: 'Essencial' | 'Desejo' | 'Poupança';
   [key: string]: any;
 }
 
@@ -129,6 +130,7 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                 <TableHead>Ano</TableHead>
                 <TableHead>Tipo</TableHead>
                 <TableHead>Descrição</TableHead>
+                <TableHead>Categoria 50/30/20</TableHead>
                 <TableHead>Valor</TableHead>
                 <TableHead className="text-center">Ações</TableHead>
               </TableRow>
@@ -201,6 +203,34 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                       />
                     ) : (
                       row.descricao
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingId === row.id ? (
+                      <Select
+                        value={editingData.categoria || ''}
+                        onValueChange={(value) => setEditingData({...editingData, categoria: value as 'Essencial' | 'Desejo' | 'Poupança'})}
+                      >
+                        <SelectTrigger className="h-8">
+                          <SelectValue placeholder="Categoria" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Essencial">💡 Essencial</SelectItem>
+                          <SelectItem value="Desejo">❤️ Desejo</SelectItem>
+                          <SelectItem value="Poupança">🐷 Poupança</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      row.categoria ? (
+                        <Badge variant="outline" className="text-xs">
+                          {row.categoria === 'Essencial' && '💡'}
+                          {row.categoria === 'Desejo' && '❤️'}
+                          {row.categoria === 'Poupança' && '🐷'}
+                          {' '}{row.categoria}
+                        </Badge>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">-</span>
+                      )
                     )}
                   </TableCell>
                   <TableCell className={`font-medium ${
@@ -295,6 +325,21 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                       className="h-8"
                       placeholder="Descrição da transação"
                     />
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={editingData.categoria || ''}
+                      onValueChange={(value) => setEditingData({...editingData, categoria: value as 'Essencial' | 'Desejo' | 'Poupança'})}
+                    >
+                      <SelectTrigger className="h-8">
+                        <SelectValue placeholder="Categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Essencial">💡 Essencial</SelectItem>
+                        <SelectItem value="Desejo">❤️ Desejo</SelectItem>
+                        <SelectItem value="Poupança">🐷 Poupança</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   <TableCell>
                     <Input

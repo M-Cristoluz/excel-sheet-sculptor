@@ -21,6 +21,7 @@ interface DataRow {
   tipo: string;
   descricao: string;
   valor: number;
+  categoria?: 'Essencial' | 'Desejo' | 'Poupança';
 }
 
 const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionFormProps) => {
@@ -28,14 +29,21 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
     data: new Date().toISOString().split('T')[0],
     tipo: '',
     descricao: '',
-    valor: ''
+    valor: '',
+    categoria: ''
   });
+  const [suggestedCategory, setSuggestedCategory] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.tipo || !formData.descricao || !formData.valor) {
       toast.error("Por favor, preencha todos os campos obrigatórios");
+      return;
+    }
+
+    if (formData.tipo === 'Despesa' && !formData.categoria) {
+      toast.error("Por favor, selecione uma categoria para despesas");
       return;
     }
 
@@ -47,7 +55,8 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
       ano: date.getFullYear(),
       tipo: formData.tipo,
       descricao: formData.descricao,
-      valor: parseFloat(formData.valor)
+      valor: parseFloat(formData.valor),
+      categoria: formData.categoria as 'Essencial' | 'Desejo' | 'Poupança' | undefined
     };
 
     onAddTransaction(newTransaction);
@@ -55,11 +64,32 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
     onClose();
   };
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = async (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
+
+    // Sugestão automática de categoria usando IA quando a descrição muda
+    if (field === 'descricao' && value.length > 3 && formData.tipo === 'Despesa') {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/categorize-transaction`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+          },
+          body: JSON.stringify({ descricao: value })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setSuggestedCategory(data.categoria);
+        }
+      } catch (error) {
+        console.log('Erro ao obter sugestão de categoria:', error);
+      }
+    }
   };
 
   return (
@@ -90,10 +120,11 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Receita">Receita</SelectItem>
+                  <SelectItem value="Receita">Receita (Salário)</SelectItem>
+                  <SelectItem value="Renda Extra">Renda Extra</SelectItem>
                   <SelectItem value="Despesa">Despesa</SelectItem>
                   <SelectItem value="Investimento">Investimento</SelectItem>
-                  <SelectItem value="Transferência">Transferência</SelectItem>
+                  <SelectItem value="Poupança">Poupança</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -122,6 +153,33 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
               required
             />
           </div>
+
+          {formData.tipo === 'Despesa' && (
+            <div className="space-y-2">
+              <Label htmlFor="categoria">Categoria 50/30/20</Label>
+              {suggestedCategory && (
+                <p className="text-xs text-primary mb-1">
+                  ✨ Sugestão da IA: {suggestedCategory}
+                </p>
+              )}
+              <Select 
+                value={formData.categoria} 
+                onValueChange={(value) => handleChange('categoria', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Essencial">💡 Essencial (50%) - Necessidades básicas</SelectItem>
+                  <SelectItem value="Desejo">❤️ Desejo (30%) - Lazer e entretenimento</SelectItem>
+                  <SelectItem value="Poupança">🐷 Poupança (20%) - Investimentos</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Categorize seu gasto de acordo com a regra 50/30/20
+              </p>
+            </div>
+          )}
           
           <div className="flex gap-2 pt-4">
             <Button type="submit" className="flex-1">

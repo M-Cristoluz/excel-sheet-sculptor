@@ -4,7 +4,8 @@ import { DataTable } from "@/components/DataTable";
 import { DataCharts } from "@/components/DataCharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles } from "lucide-react";
+import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download } from "lucide-react";
+import { exportToExcel } from "@/utils/excelExport";
 import EnhancedHeader from "@/components/EnhancedHeader";
 import StatCard from "@/components/StatCard";
 import TransactionForm from "@/components/TransactionForm";
@@ -23,6 +24,7 @@ interface DataRow {
   tipo: string;
   descricao: string;
   valor: number;
+  categoria?: 'Essencial' | 'Desejo' | 'Poupança';
 }
 
 const Index = () => {
@@ -31,12 +33,14 @@ const Index = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [salary, setSalary] = useState<number>(0);
+  const [extraIncome, setExtraIncome] = useState<number>(0);
   const [consecutiveDaysOnBudget, setConsecutiveDaysOnBudget] = useState(0);
 
   // Load preferences
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('educash-dark-mode');
     const savedSalary = localStorage.getItem('educash-salary');
+    const savedExtra = localStorage.getItem('educash-extra-income');
     const savedDays = localStorage.getItem('educash-consecutive-days');
     
     if (savedDarkMode) {
@@ -44,6 +48,9 @@ const Index = () => {
     }
     if (savedSalary) {
       setSalary(parseFloat(savedSalary));
+    }
+    if (savedExtra) {
+      setExtraIncome(parseFloat(savedExtra));
     }
     if (savedDays) {
       setConsecutiveDaysOnBudget(parseInt(savedDays));
@@ -66,6 +73,10 @@ const Index = () => {
       localStorage.setItem('educash-salary', salary.toString());
     }
   }, [salary]);
+
+  useEffect(() => {
+    localStorage.setItem('educash-extra-income', extraIncome.toString());
+  }, [extraIncome]);
 
   useEffect(() => {
     localStorage.setItem('educash-consecutive-days', consecutiveDaysOnBudget.toString());
@@ -105,19 +116,34 @@ const Index = () => {
     setSalary(newSalary);
   };
 
+  const handleExtraIncomeUpdate = (newIncome: number) => {
+    setExtraIncome(newIncome);
+  };
+
   // Calculate summary statistics
   const calculateSummary = () => {
     if (!uploadedData.length) return null;
     
-    const receitas = uploadedData.filter(item => item.tipo.toLowerCase().includes('receita')).reduce((sum, item) => sum + item.valor, 0);
+    const receitas = uploadedData.filter(item => item.tipo.toLowerCase() === 'receita').reduce((sum, item) => sum + item.valor, 0);
+    const rendaExtra = uploadedData.filter(item => item.tipo.toLowerCase() === 'renda extra').reduce((sum, item) => sum + item.valor, 0);
     const despesas = uploadedData.filter(item => item.tipo.toLowerCase().includes('despesa')).reduce((sum, item) => sum + item.valor, 0);
-    const saldo = receitas - despesas;
+    
+    // Categorização 50/30/20
+    const essenciais = uploadedData.filter(item => item.categoria === 'Essencial').reduce((sum, item) => sum + item.valor, 0);
+    const desejos = uploadedData.filter(item => item.categoria === 'Desejo').reduce((sum, item) => sum + item.valor, 0);
+    const poupanca = uploadedData.filter(item => item.categoria === 'Poupança' || item.tipo.toLowerCase() === 'poupança' || item.tipo.toLowerCase() === 'investimento').reduce((sum, item) => sum + item.valor, 0);
+    
+    const saldo = receitas + rendaExtra - despesas;
     
     return {
       receitas,
+      rendaExtra,
       despesas,
       saldo,
-      totalTransactions: uploadedData.length
+      totalTransactions: uploadedData.length,
+      essenciais,
+      desejos,
+      poupanca
     };
   };
 
@@ -200,7 +226,9 @@ const Index = () => {
             {/* Salary Configuration */}
             <SalaryConfig 
               onSalaryUpdate={handleSalaryUpdate}
+              onExtraIncomeUpdate={handleExtraIncomeUpdate}
               currentSalary={salary}
+              extraIncome={extraIncome}
               isDarkMode={isDarkMode}
             />
 
@@ -256,6 +284,9 @@ const Index = () => {
                 <FinancialRuleCard 
                   salary={salary}
                   expenses={summary.despesas}
+                  essenciais={summary.essenciais}
+                  desejos={summary.desejos}
+                  poupanca={summary.poupanca}
                   isDarkMode={isDarkMode}
                 />
                 <GamificationPanel 
@@ -286,14 +317,24 @@ const Index = () => {
                 </div>
               </div>
               
-              <IOSButton
-                variant="primary"
-                size="lg"
-                onClick={() => setShowAddForm(!showAddForm)}
-              >
-                <Plus className="h-5 w-5" />
-                Nova Transação
-              </IOSButton>
+              <div className="flex gap-2">
+                <IOSButton
+                  variant="secondary"
+                  size="lg"
+                  onClick={() => exportToExcel(uploadedData)}
+                >
+                  <Download className="h-5 w-5" />
+                  Exportar Excel
+                </IOSButton>
+                <IOSButton
+                  variant="primary"
+                  size="lg"
+                  onClick={() => setShowAddForm(!showAddForm)}
+                >
+                  <Plus className="h-5 w-5" />
+                  Nova Transação
+                </IOSButton>
+              </div>
             </div>
 
             {/* Transaction Form */}
