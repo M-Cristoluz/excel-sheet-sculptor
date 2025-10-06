@@ -44,19 +44,11 @@ const EnhancedHeader = ({ isDarkMode, toggleDarkMode, hasData, resetData }: Enha
       <div className="container mx-auto px-4 py-6 relative z-10">
         <div className="flex items-center justify-between animate-slideInUp">
           <div className="flex items-center gap-4">
-            <div className="relative glow-gold">
-              <img 
-                src={educashLogo} 
-                alt="EduCA$H Logo" 
-                className="h-16 w-16 rounded-xl bg-white/10 p-2 hover-glow transition-all duration-500 hover:scale-110 backdrop-blur-sm"
-              />
-              {/* Enhanced Halo effect */}
-              <div className={`absolute inset-0 ${
-                isDarkMode
-                  ? 'bg-gradient-to-r from-primary/30 to-accent/30'
-                  : 'bg-gradient-to-r from-accent/30 to-primary/30'
-              } rounded-full blur-2xl -z-10 animate-pulse`}></div>
-            </div>
+            <img 
+              src={educashLogo} 
+              alt="EduCA$H Logo" 
+              className="h-24 w-24 transition-all duration-300"
+            />
             <div>
               <h1 className={`text-3xl font-bold font-ios ${
                 isDarkMode ? 'text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]' : 'text-white'
