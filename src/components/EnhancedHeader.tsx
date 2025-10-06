@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wifi, WifiOff } from "lucide-react";
+import { Wifi, WifiOff, ArrowLeft } from "lucide-react";
 import educashLogo from "@/assets/educash-logo.png";
 import DarkModeToggle from "./DarkModeToggle";
 
@@ -10,9 +11,11 @@ interface EnhancedHeaderProps {
   toggleDarkMode: () => void;
   hasData: boolean;
   resetData: () => void;
+  showBackButton?: boolean;
 }
 
-const EnhancedHeader = ({ isDarkMode, toggleDarkMode, hasData, resetData }: EnhancedHeaderProps) => {
+const EnhancedHeader = ({ isDarkMode, toggleDarkMode, hasData, resetData, showBackButton = true }: EnhancedHeaderProps) => {
+  const navigate = useNavigate();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
@@ -44,6 +47,14 @@ const EnhancedHeader = ({ isDarkMode, toggleDarkMode, hasData, resetData }: Enha
       <div className="container mx-auto px-4 py-6 relative z-10">
         <div className="flex items-center justify-between animate-slideInUp">
           <div className="flex items-center gap-4">
+            {showBackButton && (
+              <button
+                onClick={() => navigate('/')}
+                className="p-3 rounded-full bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 backdrop-blur-sm"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
             <img 
               src={educashLogo} 
               alt="EduCA$H Logo" 

@@ -157,22 +157,13 @@ const Index = () => {
         ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
         : 'bg-gradient-to-br from-background to-muted/20'
     }`}>
-      {/* Back Button */}
-      <div className="container mx-auto px-4 pt-4">
-        <button
-          onClick={() => navigate('/')}
-          className="p-3 rounded-full bg-gradient-to-r from-educash-green-base to-primary hover:from-educash-green-dark hover:to-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-      </div>
-
       {/* Enhanced Header */}
       <EnhancedHeader 
         isDarkMode={isDarkMode}
         toggleDarkMode={toggleDarkMode}
         hasData={hasData}
         resetData={resetData}
+        showBackButton={true}
       />
 
       <main className="container mx-auto px-4 py-8 max-w-7xl">
