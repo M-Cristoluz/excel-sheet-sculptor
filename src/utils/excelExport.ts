@@ -47,52 +47,16 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
 };
 
 export const generateTemplateExcel = () => {
-  // Dados de exemplo para a planilha template
+  // Planilha limpa apenas com cabeçalhos
   const templateData = [
     {
-      'Data': '01/01/2025',
-      'Mês': 'Janeiro',
-      'Ano': 2025,
-      'Tipo': 'Receita',
-      'Descrição': 'Salário',
-      'Valor': 5000.00,
-      'Categoria 50/30/20': 'Essencial'
-    },
-    {
-      'Data': '05/01/2025',
-      'Mês': 'Janeiro',
-      'Ano': 2025,
-      'Tipo': 'Despesa',
-      'Descrição': 'Aluguel',
-      'Valor': 1500.00,
-      'Categoria 50/30/20': 'Essencial'
-    },
-    {
-      'Data': '10/01/2025',
-      'Mês': 'Janeiro',
-      'Ano': 2025,
-      'Tipo': 'Despesa',
-      'Descrição': 'Supermercado',
-      'Valor': 800.00,
-      'Categoria 50/30/20': 'Essencial'
-    },
-    {
-      'Data': '15/01/2025',
-      'Mês': 'Janeiro',
-      'Ano': 2025,
-      'Tipo': 'Despesa',
-      'Descrição': 'Cinema',
-      'Valor': 80.00,
-      'Categoria 50/30/20': 'Desejo'
-    },
-    {
-      'Data': '20/01/2025',
-      'Mês': 'Janeiro',
-      'Ano': 2025,
-      'Tipo': 'Poupança',
-      'Descrição': 'Investimento',
-      'Valor': 500.00,
-      'Categoria 50/30/20': 'Poupança'
+      'Data': '',
+      'Mês': '',
+      'Ano': '',
+      'Tipo': '',
+      'Descrição': '',
+      'Valor': '',
+      'Categoria 50/30/20': ''
     }
   ];
 
