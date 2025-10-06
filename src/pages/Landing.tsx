@@ -13,7 +13,8 @@ import {
   ArrowRight,
   CheckCircle2,
   Sparkles,
-  Zap
+  Zap,
+  Instagram
 } from "lucide-react";
 import educashLogo from "@/assets/educash-logo.png";
 import mascot from "@/assets/mascot.jpeg";
@@ -475,6 +476,67 @@ const Landing = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Instagram Section */}
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-muted/50 via-background to-educash-green-base/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <Card className="overflow-hidden border-2 border-educash-gold/30 hover:border-educash-gold hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-background to-educash-green-base/5">
+              <CardContent className="p-8 sm:p-12 text-center space-y-6">
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#f09433] via-[#e6683c] via-[#dc2743] via-[#cc2366] to-[#bc1888] rounded-full blur-xl opacity-60 animate-pulse"></div>
+                    <div className="relative p-6 rounded-full bg-gradient-to-r from-[#f09433] via-[#e6683c] via-[#dc2743] via-[#cc2366] to-[#bc1888] shadow-2xl">
+                      <Instagram className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888]">
+                    Siga-nos no Instagram! 📱
+                  </h3>
+                  <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                    Acompanhe atualizações, novidades da plataforma, dicas financeiras e muito mais sobre o EduCA$H!
+                  </p>
+                </div>
+                
+                <a
+                  href="https://www.instagram.com/educash.oficial?igsh=bnF3cHZlMW9oM3ph"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block"
+                >
+                  <Button 
+                    size="lg"
+                    className="bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] hover:scale-110 hover:shadow-2xl text-white text-base sm:text-xl px-8 sm:px-12 py-6 sm:py-7 rounded-2xl font-display font-bold transition-all duration-500 group"
+                  >
+                    <Instagram className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:rotate-12 transition-transform duration-500" />
+                    @educash.oficial
+                    <ArrowRight className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-2 transition-transform duration-300" />
+                  </Button>
+                </a>
+
+                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 pt-4">
+                  {[
+                    { text: "Dicas Diárias", icon: "💡" },
+                    { text: "Novidades", icon: "🎉" },
+                    { text: "Comunidade", icon: "👥" }
+                  ].map((item, index) => (
+                    <div 
+                      key={index}
+                      className="flex items-center gap-2 bg-gradient-to-r from-[#f09433]/10 to-[#bc1888]/10 px-4 sm:px-6 py-2 rounded-xl border border-[#dc2743]/20"
+                    >
+                      <span className="text-xl sm:text-2xl">{item.icon}</span>
+                      <span className="text-foreground font-display font-semibold text-sm sm:text-base">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
