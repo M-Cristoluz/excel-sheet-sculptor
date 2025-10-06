@@ -480,6 +480,63 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Suporte Section */}
+      <section className="py-16 sm:py-24 bg-gradient-to-br from-muted/30 to-educash-green-base/10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
+            <Card className="overflow-hidden border-2 border-educash-green-base/30 hover:border-educash-green-base hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-background to-educash-green-base/5">
+              <CardContent className="p-8 sm:p-12 text-center space-y-6">
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-educash-green-base/40 rounded-full blur-xl animate-pulse"></div>
+                    <div className="relative p-6 rounded-full bg-gradient-to-r from-educash-green-base to-educash-green-dark shadow-2xl">
+                      <Shield className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-2xl sm:text-4xl lg:text-5xl font-display font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-educash-green-base to-educash-green-dark">
+                    Suporte 🛠️
+                  </h3>
+                  <p className="text-xl sm:text-2xl text-foreground font-display font-semibold">
+                    Viu algum bug? Nos ajude a melhorar!
+                  </p>
+                  <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                    Sua opinião é fundamental para aprimorarmos a plataforma. Cada feedback, sugestão ou relato de problema 
+                    nos ajuda a criar uma experiência melhor para toda a comunidade EduCA$H. Juntos, construímos uma 
+                    ferramenta cada vez mais incrível! 💚
+                  </p>
+                </div>
+                
+                <a
+                  href="mailto:educash.pe@gmail.com"
+                  className="inline-block"
+                >
+                  <Button 
+                    size="lg"
+                    className="bg-gradient-to-r from-educash-green-base to-educash-green-dark hover:scale-110 hover:shadow-2xl text-white text-base sm:text-xl px-8 sm:px-12 py-6 sm:py-7 rounded-2xl font-display font-bold transition-all duration-500 group"
+                  >
+                    <Shield className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:rotate-12 transition-transform duration-500" />
+                    Fale Conosco
+                    <ArrowRight className="ml-2 sm:ml-3 h-5 w-5 sm:h-6 sm:w-6 group-hover:translate-x-2 transition-transform duration-300" />
+                  </Button>
+                </a>
+
+                <div className="pt-4 space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    📧 E-mail: <a href="mailto:educash.pe@gmail.com" className="text-educash-green-base hover:text-educash-green-dark font-semibold transition-colors">educash.pe@gmail.com</a>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Respondemos em até 48 horas úteis
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Instagram Section */}
       <section className="py-12 sm:py-20 bg-gradient-to-br from-muted/50 via-background to-educash-green-base/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -556,13 +613,26 @@ const Landing = () => {
                 <p className="text-xs sm:text-sm text-educash-gold">Mente Rica, Futuro Brilhante ✨</p>
               </div>
             </div>
-            <div className="text-center md:text-right">
-              <p className="text-white/80 font-light text-sm sm:text-base">
-                © 2025 EduCA$H. Todos os direitos reservados.
-              </p>
-              <p className="text-educash-gold/80 text-xs sm:text-sm mt-1">
-                Feito com 💚 por jovens, para jovens
-              </p>
+            
+            <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
+              <div className="text-center">
+                <p className="text-white/90 font-semibold text-sm sm:text-base mb-1">Suporte</p>
+                <a 
+                  href="mailto:educash.pe@gmail.com" 
+                  className="text-educash-gold hover:text-white transition-colors text-xs sm:text-sm"
+                >
+                  educash.pe@gmail.com
+                </a>
+              </div>
+              
+              <div className="text-center md:text-right">
+                <p className="text-white/80 font-light text-sm sm:text-base">
+                  © 2025 EduCA$H. Todos os direitos reservados.
+                </p>
+                <p className="text-educash-gold/80 text-xs sm:text-sm mt-1">
+                  Feito com 💚 por jovens, para jovens
+                </p>
+              </div>
             </div>
           </div>
         </div>

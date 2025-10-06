@@ -390,10 +390,22 @@ const Index = () => {
       <footer className={`border-t mt-16 transition-all duration-500 ${
         isDarkMode ? 'bg-gray-900/50 glass-effect' : 'bg-secondary/50'
       }`}>
-        <div className="container mx-auto px-4 py-6">
-          <div className="text-center text-sm text-muted-foreground">
-            <p>© 2025 EduCA$H - Sistema Educativo Financeiro</p>
-            <p className="mt-1">Desenvolvendo mentes ricas para futuros brilhantes ✨</p>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="text-center sm:text-left">
+              <p className="text-sm font-semibold text-foreground">© 2025 EduCA$H - Sistema Educativo Financeiro</p>
+              <p className="text-xs text-muted-foreground mt-1">Desenvolvendo mentes ricas para futuros brilhantes ✨</p>
+            </div>
+            
+            <div className="text-center sm:text-right">
+              <p className="text-sm font-semibold text-foreground mb-1">Suporte</p>
+              <a 
+                href="mailto:educash.pe@gmail.com" 
+                className="text-sm text-educash-green-base hover:text-educash-green-dark transition-colors font-medium"
+              >
+                educash.pe@gmail.com
+              </a>
+            </div>
           </div>
         </div>
       </footer>
