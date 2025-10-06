@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wifi, WifiOff, ArrowLeft, Mail } from "lucide-react";
+import { Wifi, WifiOff, ArrowLeft } from "lucide-react";
 import educashLogo from "@/assets/educash-logo.png";
 import DarkModeToggle from "./DarkModeToggle";
 
@@ -76,15 +76,6 @@ const EnhancedHeader = ({ isDarkMode, toggleDarkMode, hasData, resetData, showBa
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
-            <a
-              href="mailto:educash.pe@gmail.com"
-              className="p-2 sm:p-3 rounded-full bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 backdrop-blur-sm flex-shrink-0"
-              aria-label="Suporte por e-mail"
-              title="Suporte: educash.pe@gmail.com"
-            >
-              <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
-            </a>
-            
             <DarkModeToggle isDarkMode={isDarkMode} toggleDarkMode={toggleDarkMode} />
 
             {hasData && (
