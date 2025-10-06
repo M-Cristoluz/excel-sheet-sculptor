@@ -43,6 +43,8 @@ All colors MUST be HSL.
     /* EduCA$H Brand Colors - Exact specification from PDF */
     --educash-green-dark: 158 100% 20%; /* #00653A */
     --educash-green-base: 150 55% 42%;  /* #209058 */
+    --educash-green-medium: 155 60% 50%; /* Medium Green */
+    --educash-yellow: 48 100% 65%;      /* Bright Yellow */
     --educash-gold: 48 99% 68%;         /* #FEE15F */
     --educash-slogan: 0 0% 90%;         /* #E5E5E5 */
     
@@ -165,9 +167,15 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-ios;
+    @apply bg-background text-foreground;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'system-ui', sans-serif;
     min-height: 100vh;
     transition: var(--transition-smooth);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Quicksand', 'Poppins', sans-serif;
+    font-weight: 700;
   }
 
   /* Custom Scrollbar */

@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'system-ui', 'sans-serif'],
-        ios: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'sans-serif'],
+        sans: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        ios: ['Poppins', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        display: ['Quicksand', 'Poppins', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -56,7 +57,9 @@ export default {
           green: {
             dark: "hsl(var(--educash-green-dark))",
             base: "hsl(var(--educash-green-base))",
+            medium: "hsl(var(--educash-green-medium))",
           },
+          yellow: "hsl(var(--educash-yellow))",
           gold: "hsl(var(--educash-gold))",
           slogan: "hsl(var(--educash-slogan))",
         },
