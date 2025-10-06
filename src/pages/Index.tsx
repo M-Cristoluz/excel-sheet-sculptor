@@ -159,15 +159,12 @@ const Index = () => {
     }`}>
       {/* Back Button */}
       <div className="container mx-auto px-4 pt-4">
-        <IOSButton
-          variant="ghost"
-          size="sm"
+        <button
           onClick={() => navigate('/')}
-          className="gap-2"
+          className="p-3 rounded-full bg-gradient-to-r from-educash-green-base to-primary hover:from-educash-green-dark hover:to-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Voltar para Landing Page
-        </IOSButton>
+          <ArrowLeft className="h-5 w-5" />
+        </button>
       </div>
 
       {/* Enhanced Header */}
