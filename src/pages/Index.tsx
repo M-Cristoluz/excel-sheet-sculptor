@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FileUpload } from "@/components/FileUpload";
 import { DataTable } from "@/components/DataTable";
 import { DataCharts } from "@/components/DataCharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download } from "lucide-react";
-import { exportToExcel } from "@/utils/excelExport";
+import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download, ArrowLeft, FileSpreadsheet } from "lucide-react";
+import { exportToExcel, generateTemplateExcel } from "@/utils/excelExport";
 import EnhancedHeader from "@/components/EnhancedHeader";
 import StatCard from "@/components/StatCard";
 import TransactionForm from "@/components/TransactionForm";
@@ -28,6 +29,7 @@ interface DataRow {
 }
 
 const Index = () => {
+  const navigate = useNavigate();
   const [uploadedData, setUploadedData] = useState<DataRow[]>([]);
   const [hasData, setHasData] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -155,6 +157,19 @@ const Index = () => {
         ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
         : 'bg-gradient-to-br from-background to-muted/20'
     }`}>
+      {/* Back Button */}
+      <div className="container mx-auto px-4 pt-4">
+        <IOSButton
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate('/')}
+          className="gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar para Landing Page
+        </IOSButton>
+      </div>
+
       {/* Enhanced Header */}
       <EnhancedHeader 
         isDarkMode={isDarkMode}
@@ -216,6 +231,19 @@ const Index = () => {
                   Modifique dados diretamente pela interface
                 </p>
               </IOSCard>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+              <IOSButton
+                variant="secondary"
+                size="lg"
+                onClick={generateTemplateExcel}
+                className="w-full sm:w-auto"
+              >
+                <FileSpreadsheet className="h-5 w-5" />
+                Gerar Planilha Template
+              </IOSButton>
+              <span className="text-muted-foreground text-sm">ou</span>
             </div>
 
             <FileUpload onFileUpload={handleFileUpload} />
