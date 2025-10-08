@@ -12,15 +12,15 @@ interface DataRow {
 }
 
 export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados.xlsx') => {
-  // Preparar dados para exportação
+  // Preparar dados para exportação com formato compatível para reimportação
   const exportData = data.map(row => ({
     'Data': row.data,
-    'Mês': row.mes || '',
+    'Mes': row.mes || '',
     'Ano': row.ano || '',
     'Tipo': row.tipo,
-    'Descrição': row.descricao,
+    'Descricao': row.descricao,
     'Valor': row.valor,
-    'Categoria 50/30/20': row.categoria || ''
+    'Categoria': row.categoria || ''
   }));
 
   // Criar workbook e worksheet
@@ -30,10 +30,10 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
   // Ajustar largura das colunas
   const columnWidths = [
     { wch: 12 }, // Data
-    { wch: 10 }, // Mês
+    { wch: 10 }, // Mes
     { wch: 6 },  // Ano
     { wch: 15 }, // Tipo
-    { wch: 30 }, // Descrição
+    { wch: 30 }, // Descricao
     { wch: 12 }, // Valor
     { wch: 18 }, // Categoria
   ];
@@ -47,16 +47,16 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
 };
 
 export const generateTemplateExcel = () => {
-  // Planilha limpa apenas com cabeçalhos
+  // Planilha limpa apenas com cabeçalhos compatíveis
   const templateData = [
     {
       'Data': '',
-      'Mês': '',
+      'Mes': '',
       'Ano': '',
       'Tipo': '',
-      'Descrição': '',
+      'Descricao': '',
       'Valor': '',
-      'Categoria 50/30/20': ''
+      'Categoria': ''
     }
   ];
 
@@ -67,10 +67,10 @@ export const generateTemplateExcel = () => {
   // Ajustar largura das colunas
   const columnWidths = [
     { wch: 12 }, // Data
-    { wch: 10 }, // Mês
+    { wch: 10 }, // Mes
     { wch: 6 },  // Ano
     { wch: 15 }, // Tipo
-    { wch: 30 }, // Descrição
+    { wch: 30 }, // Descricao
     { wch: 12 }, // Valor
     { wch: 18 }, // Categoria
   ];

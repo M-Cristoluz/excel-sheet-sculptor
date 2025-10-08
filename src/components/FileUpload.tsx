@@ -241,7 +241,7 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
           } else if (lowerHeader.includes('tipo')) {
             if (value) {
               let tipo = String(value).trim();
-              // Normalize type
+              // Normalize type - aceita tanto formato antigo quanto novo
               if (tipo === 'Entrada') tipo = 'Receita';
               else if (tipo === 'Saída') tipo = 'Despesa';
               obj.tipo = tipo;
@@ -251,6 +251,21 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
             if (value) {
               obj.descricao = String(value).trim();
               hasData = true;
+            }
+          } else if (lowerHeader.includes('categoria')) {
+            if (value) {
+              const categoriaValue = String(value).trim();
+              if (categoriaValue && categoriaValue !== '') {
+                obj.categoria = categoriaValue;
+              }
+            }
+          } else if (lowerHeader.includes('mês') || lowerHeader.includes('mes')) {
+            if (value) {
+              obj.mes = String(value).trim();
+            }
+          } else if (lowerHeader.includes('ano')) {
+            if (value) {
+              obj.ano = parseInt(String(value));
             }
           } else if (lowerHeader.includes('valor')) {
             if (value !== undefined && value !== null && value !== '') {
