@@ -75,24 +75,29 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
 };
 
 export const generateTemplateExcel = () => {
-  // Planilha com linha de exemplo para garantir compatibilidade
-  const templateData = [
-    {
-      'Data': '1/1/25',
-      'mês': 'JAN',
-      'Ano': 2025,
-      'Tipo': 'Entrada',
-      'Descrição': 'Exemplo',
-      'Valor': 'R$ 0,00'
-    }
-  ];
-
-  // Criar workbook e worksheet
+  // Criar workbook
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet(templateData);
+  
+  // Criar planilha com estrutura exata da PlanilhaEduCaH.xlsx
+  const ws = XLSX.utils.aoa_to_sheet([
+    ['PLANILHA DE CONTROLE FINANCEIRO'], // Linha 1
+    [], // Linha 2
+    [], // Linha 3
+    [], // Linha 4
+    [], // Linha 5
+    [], // Linha 6
+    [], // Linha 7
+    [], // Linha 8
+    [], // Linha 9
+    [], // Linha 10
+    [], // Linha 11
+    [], // Linha 12
+    ['Data', 'mês', 'Ano', 'Tipo', 'Descrição', 'Valor'], // Linha 13 - Cabeçalhos
+    ['1/1/25', 'JAN', 2025, 'Entrada', 'Exemplo', 'R$ 0,00'] // Linha 14 - Exemplo com valores zerados
+  ]);
 
   // Ajustar largura das colunas
-  const columnWidths = [
+  ws['!cols'] = [
     { wch: 12 }, // Data
     { wch: 8 },  // mês
     { wch: 6 },  // Ano
@@ -100,9 +105,8 @@ export const generateTemplateExcel = () => {
     { wch: 25 }, // Descrição
     { wch: 15 }, // Valor
   ];
-  ws['!cols'] = columnWidths;
 
-  // Adicionar worksheet ao workbook com nome correto
+  // Adicionar worksheet ao workbook
   XLSX.utils.book_append_sheet(wb, ws, 'LANÇAMENTOS');
 
   // Gerar arquivo e fazer download

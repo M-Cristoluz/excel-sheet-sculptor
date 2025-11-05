@@ -159,29 +159,61 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
   const processExcelData = (rawData: any[]): any[] => {
     console.log('🔍 Iniciando processamento dos dados...');
     console.log('📊 Total de linhas brutas:', rawData.length);
-    console.log('🔍 Primeiras 5 linhas:', rawData.slice(0, 5));
+    console.log('🔍 Primeiras 15 linhas:', rawData.slice(0, 15));
     
-    // Find header row (usually contains "Data", "Tipo", etc.)
+    // Função auxiliar para normalizar strings
+    const normalizeString = (str: string): string => {
+      if (!str) return '';
+      return str.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    };
+    
+    // A planilha PlanilhaEduCaH.xlsx tem cabeçalhos na linha 13 (índice 12)
+    // Formato: Data | mês | Ano | Tipo | Descrição | Valor
     let headerRowIndex = -1;
     let headers: string[] = [];
 
-    for (let i = 0; i < rawData.length; i++) {
+    // Procurar cabeçalho especificamente entre linhas 10-25 (onde geralmente está)
+    for (let i = 10; i < Math.min(25, rawData.length); i++) {
       const row = rawData[i];
       if (row && Array.isArray(row)) {
         // Normalizar células para comparação
-        const normalizedCells = row.map(cell => 
-          cell ? String(cell).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
-        );
+        const normalizedCells = row.map(cell => normalizeString(String(cell || '')));
         
-        const hasData = normalizedCells.some(cell => cell.includes('data'));
-        const hasTipo = normalizedCells.some(cell => cell.includes('tipo'));
-        const hasValor = normalizedCells.some(cell => cell.includes('valor'));
+        // Verificar presença de todas as colunas esperadas
+        const hasData = normalizedCells.some(cell => cell === 'data');
+        const hasMes = normalizedCells.some(cell => cell === 'mes');
+        const hasAno = normalizedCells.some(cell => cell === 'ano');
+        const hasTipo = normalizedCells.some(cell => cell === 'tipo');
+        const hasDescricao = normalizedCells.some(cell => cell === 'descricao');
+        const hasValor = normalizedCells.some(cell => cell === 'valor');
         
-        if (hasData && hasTipo && hasValor) {
+        if (hasData && hasMes && hasAno && hasTipo && hasDescricao && hasValor) {
           headerRowIndex = i;
           headers = row.map((h: any) => h ? String(h).trim() : '');
-          console.log('📋 Cabeçalhos encontrados na linha', i, ':', headers);
+          console.log('✅ Cabeçalhos encontrados na linha', i + 1, ':', headers);
           break;
+        }
+      }
+    }
+    
+    // Se não encontrou entre linhas 10-25, buscar em todo o arquivo
+    if (headerRowIndex === -1) {
+      console.log('⚠️ Cabeçalho não encontrado nas linhas 10-25, buscando em todo arquivo...');
+      for (let i = 0; i < rawData.length; i++) {
+        const row = rawData[i];
+        if (row && Array.isArray(row)) {
+          const normalizedCells = row.map(cell => normalizeString(String(cell || '')));
+          
+          const hasData = normalizedCells.some(cell => cell === 'data');
+          const hasTipo = normalizedCells.some(cell => cell === 'tipo');
+          const hasValor = normalizedCells.some(cell => cell === 'valor');
+          
+          if (hasData && hasTipo && hasValor) {
+            headerRowIndex = i;
+            headers = row.map((h: any) => h ? String(h).trim() : '');
+            console.log('✅ Cabeçalhos encontrados na linha', i + 1, ':', headers);
+            break;
+          }
         }
       }
     }
