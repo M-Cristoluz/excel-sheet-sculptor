@@ -248,7 +248,7 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
           } else if (lowerHeader.includes('tipo')) {
             if (value) {
               let tipo = String(value).trim();
-              // Normalize type - aceita tanto formato antigo quanto novo
+              // Normalize type - aceita Entrada/Saída e Receita/Despesa
               if (tipo === 'Entrada') tipo = 'Receita';
               else if (tipo === 'Saída') tipo = 'Despesa';
               obj.tipo = tipo;
@@ -268,7 +268,14 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
             }
           } else if (lowerHeader.includes('mês') || lowerHeader.includes('mes')) {
             if (value) {
-              obj.mes = String(value).trim();
+              const mesValue = String(value).trim();
+              // Converter siglas de mês para nome completo
+              const mesesMap: { [key: string]: string } = {
+                'JAN': 'janeiro', 'FEV': 'fevereiro', 'MAR': 'março', 'ABR': 'abril',
+                'MAI': 'maio', 'JUN': 'junho', 'JUL': 'julho', 'AGO': 'agosto',
+                'SET': 'setembro', 'OUT': 'outubro', 'NOV': 'novembro', 'DEZ': 'dezembro'
+              };
+              obj.mes = mesesMap[mesValue.toUpperCase()] || mesValue;
             }
           } else if (lowerHeader.includes('ano')) {
             if (value) {
@@ -280,14 +287,16 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
               let valorStr = String(value);
               
               // Remove R$, spaces, and convert to number
-              // Format can be: R$ 1,000.00 or R$ 1.000,00 or 1000.00
-              valorStr = valorStr.replace(/R\$/g, '').trim();
+              // Format can be: R$ 1,000.00 or R$ 1.000,00 or 1000.00 or 1.000,00
+              valorStr = valorStr.replace(/R\$/g, '').replace(/\s/g, '').trim();
               
-              // Check if it uses comma as decimal separator (Brazilian format)
+              // Detectar formato: se tem vírgula, assumir formato brasileiro (1.000,00)
+              // Se tem apenas ponto, assumir formato americano (1000.00)
               if (valorStr.includes(',')) {
-                // Remove dots (thousand separators) and replace comma with dot
+                // Formato brasileiro: remover pontos (separadores de milhares) e trocar vírgula por ponto
                 valorStr = valorStr.replace(/\./g, '').replace(',', '.');
               }
+              // Se tiver apenas ponto, já está em formato correto para parseFloat
               
               const numero = parseFloat(valorStr);
               if (!isNaN(numero) && numero > 0) {

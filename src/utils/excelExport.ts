@@ -11,24 +11,44 @@ interface DataRow {
   categoria?: 'Essencial' | 'Desejo' | 'Poupança';
 }
 
+// Função auxiliar para converter mês em sigla
+const getMesSigla = (mes: string): string => {
+  const mesesMap: { [key: string]: string } = {
+    'janeiro': 'JAN', 'fevereiro': 'FEV', 'março': 'MAR', 'abril': 'ABR',
+    'maio': 'MAI', 'junho': 'JUN', 'julho': 'JUL', 'agosto': 'AGO',
+    'setembro': 'SET', 'outubro': 'OUT', 'novembro': 'NOV', 'dezembro': 'DEZ'
+  };
+  return mesesMap[mes.toLowerCase()] || mes.toUpperCase().substring(0, 3);
+};
+
+// Função auxiliar para formatar valor em moeda brasileira
+const formatarValor = (valor: number): string => {
+  return `R$ ${valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+
 export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados.xlsx') => {
   // Preparar dados para exportação com formato compatível para reimportação
   const exportData = data.map(row => {
-    // Garantir que data está em formato DD/MM/YYYY para melhor compatibilidade
+    // Garantir que data está em formato D/M/YY (sem zeros à esquerda desnecessários)
     let dataFormatada = row.data;
     if (row.data && row.data.includes('-')) {
       const [ano, mes, dia] = row.data.split('-');
-      dataFormatada = `${dia}/${mes}/${ano}`;
+      const anoAbreviado = ano.substring(2); // Pegar apenas os 2 últimos dígitos do ano
+      dataFormatada = `${parseInt(dia)}/${parseInt(mes)}/${anoAbreviado}`;
     }
+    
+    // Converter tipo: Receita -> Entrada, Despesa -> Saída
+    let tipoFormatado = row.tipo;
+    if (row.tipo === 'Receita') tipoFormatado = 'Entrada';
+    else if (row.tipo === 'Despesa') tipoFormatado = 'Saída';
     
     return {
       'Data': dataFormatada,
-      'Mes': row.mes || '',
+      'mês': getMesSigla(row.mes || ''),
       'Ano': row.ano || new Date().getFullYear(),
-      'Tipo': row.tipo,
-      'Descricao': row.descricao,
-      'Valor': row.valor,
-      'Categoria': row.categoria || ''
+      'Tipo': tipoFormatado,
+      'Descrição': row.descricao,
+      'Valor': formatarValor(row.valor)
     };
   });
 
@@ -39,17 +59,16 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
   // Ajustar largura das colunas
   const columnWidths = [
     { wch: 12 }, // Data
-    { wch: 10 }, // Mes
+    { wch: 8 },  // mês
     { wch: 6 },  // Ano
-    { wch: 15 }, // Tipo
-    { wch: 30 }, // Descricao
-    { wch: 12 }, // Valor
-    { wch: 18 }, // Categoria
+    { wch: 12 }, // Tipo
+    { wch: 25 }, // Descrição
+    { wch: 15 }, // Valor
   ];
   ws['!cols'] = columnWidths;
 
-  // Adicionar worksheet ao workbook
-  XLSX.utils.book_append_sheet(wb, ws, 'Transações');
+  // Adicionar worksheet ao workbook com nome correto
+  XLSX.utils.book_append_sheet(wb, ws, 'LANÇAMENTOS');
 
   // Gerar arquivo e fazer download
   XLSX.writeFile(wb, fileName);
@@ -60,12 +79,11 @@ export const generateTemplateExcel = () => {
   const templateData = [
     {
       'Data': '',
-      'Mes': '',
+      'mês': '',
       'Ano': '',
       'Tipo': '',
-      'Descricao': '',
-      'Valor': '',
-      'Categoria': ''
+      'Descrição': '',
+      'Valor': ''
     }
   ];
 
@@ -76,17 +94,16 @@ export const generateTemplateExcel = () => {
   // Ajustar largura das colunas
   const columnWidths = [
     { wch: 12 }, // Data
-    { wch: 10 }, // Mes
+    { wch: 8 },  // mês
     { wch: 6 },  // Ano
-    { wch: 15 }, // Tipo
-    { wch: 30 }, // Descricao
-    { wch: 12 }, // Valor
-    { wch: 18 }, // Categoria
+    { wch: 12 }, // Tipo
+    { wch: 25 }, // Descrição
+    { wch: 15 }, // Valor
   ];
   ws['!cols'] = columnWidths;
 
-  // Adicionar worksheet ao workbook
-  XLSX.utils.book_append_sheet(wb, ws, 'Transações');
+  // Adicionar worksheet ao workbook com nome correto
+  XLSX.utils.book_append_sheet(wb, ws, 'LANÇAMENTOS');
 
   // Gerar arquivo e fazer download
   XLSX.writeFile(wb, 'educash-template.xlsx');
