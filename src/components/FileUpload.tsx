@@ -358,15 +358,20 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
           }
         });
 
-        // Only return rows with actual data (ignorar linhas sem tipo, descrição ou com valor zero)
-        if (!hasData || !obj.tipo || !obj.descricao || !obj.valor || obj.valor === 0) {
-          console.log(`❌ Linha ${index} ignorada - Faltando dados ou valor zero:`, {
+        // Only return rows with actual data (linha precisa ter tipo, descrição e data válidos)
+        if (!hasData || !obj.tipo || !obj.descricao) {
+          console.log(`❌ Linha ${index} ignorada - Faltando dados obrigatórios:`, {
             hasData,
             tipo: obj.tipo,
             descricao: obj.descricao,
             valor: obj.valor
           });
           return null;
+        }
+        
+        // Se valor não foi definido, atribuir 0
+        if (obj.valor === undefined || obj.valor === null) {
+          obj.valor = 0;
         }
 
         // Ensure all required fields exist

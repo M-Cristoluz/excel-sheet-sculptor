@@ -93,6 +93,7 @@ export const generateTemplateExcel = () => {
     [], // Linha 11
     [], // Linha 12
     ['Data', 'mês', 'Ano', 'Tipo', 'Descrição', 'Valor'], // Linha 13 - Cabeçalhos
+    ['1/1/25', 'JAN', 2025, 'Entrada', 'Exemplo', 0] // Linha 14 - Exemplo com valores zerados
   ]);
 
   // Ajustar largura das colunas
