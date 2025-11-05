@@ -75,15 +75,15 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
 };
 
 export const generateTemplateExcel = () => {
-  // Planilha limpa apenas com cabeçalhos compatíveis
+  // Planilha com linha de exemplo para garantir compatibilidade
   const templateData = [
     {
-      'Data': '',
-      'mês': '',
-      'Ano': '',
-      'Tipo': '',
-      'Descrição': '',
-      'Valor': ''
+      'Data': '1/1/25',
+      'mês': 'JAN',
+      'Ano': 2025,
+      'Tipo': 'Entrada',
+      'Descrição': 'Exemplo',
+      'Valor': 'R$ 0,00'
     }
   ];
 
