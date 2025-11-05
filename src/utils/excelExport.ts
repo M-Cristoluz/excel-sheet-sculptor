@@ -13,15 +13,24 @@ interface DataRow {
 
 export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados.xlsx') => {
   // Preparar dados para exportação com formato compatível para reimportação
-  const exportData = data.map(row => ({
-    'Data': row.data,
-    'Mes': row.mes || '',
-    'Ano': row.ano || '',
-    'Tipo': row.tipo,
-    'Descricao': row.descricao,
-    'Valor': row.valor,
-    'Categoria': row.categoria || ''
-  }));
+  const exportData = data.map(row => {
+    // Garantir que data está em formato DD/MM/YYYY para melhor compatibilidade
+    let dataFormatada = row.data;
+    if (row.data && row.data.includes('-')) {
+      const [ano, mes, dia] = row.data.split('-');
+      dataFormatada = `${dia}/${mes}/${ano}`;
+    }
+    
+    return {
+      'Data': dataFormatada,
+      'Mes': row.mes || '',
+      'Ano': row.ano || new Date().getFullYear(),
+      'Tipo': row.tipo,
+      'Descricao': row.descricao,
+      'Valor': row.valor,
+      'Categoria': row.categoria || ''
+    };
+  });
 
   // Criar workbook e worksheet
   const wb = XLSX.utils.book_new();

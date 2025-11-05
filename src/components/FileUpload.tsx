@@ -217,15 +217,20 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
                 const excelEpoch = new Date(1899, 11, 30);
                 dateValue = new Date(excelEpoch.getTime() + value * 86400000);
               } else if (typeof value === 'string') {
-                // Try to parse string date
-                const parts = value.split('/');
-                if (parts.length === 3) {
-                  // Format: DD/MM/YY or DD/MM/YYYY
-                  let day = parseInt(parts[0]);
-                  let month = parseInt(parts[1]) - 1; // JS months are 0-based
-                  let year = parseInt(parts[2]);
-                  if (year < 100) year += 2000;
-                  dateValue = new Date(year, month, day);
+                // Try to parse string date - support multiple formats
+                if (value.includes('/')) {
+                  const parts = value.split('/');
+                  if (parts.length === 3) {
+                    // Format: DD/MM/YYYY or DD/MM/YY
+                    let day = parseInt(parts[0]);
+                    let month = parseInt(parts[1]) - 1; // JS months are 0-based
+                    let year = parseInt(parts[2]);
+                    if (year < 100) year += 2000;
+                    dateValue = new Date(year, month, day);
+                  }
+                } else if (value.includes('-')) {
+                  // Format: YYYY-MM-DD
+                  dateValue = new Date(value);
                 } else {
                   dateValue = new Date(value);
                 }
@@ -233,10 +238,12 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
                 dateValue = new Date(value);
               }
               
-              obj.data = dateValue.toISOString().split('T')[0];
-              obj.mes = dateValue.toLocaleDateString('pt-BR', { month: 'long' });
-              obj.ano = dateValue.getFullYear();
-              hasData = true;
+              if (dateValue && !isNaN(dateValue.getTime())) {
+                obj.data = dateValue.toISOString().split('T')[0];
+                obj.mes = dateValue.toLocaleDateString('pt-BR', { month: 'long' });
+                obj.ano = dateValue.getFullYear();
+                hasData = true;
+              }
             }
           } else if (lowerHeader.includes('tipo')) {
             if (value) {
