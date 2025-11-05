@@ -158,6 +158,8 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
 
   const processExcelData = (rawData: any[]): any[] => {
     console.log('🔍 Iniciando processamento dos dados...');
+    console.log('📊 Total de linhas brutas:', rawData.length);
+    console.log('🔍 Primeiras 5 linhas:', rawData.slice(0, 5));
     
     // Find header row (usually contains "Data", "Tipo", etc.)
     let headerRowIndex = -1;
@@ -185,23 +187,28 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     }
 
     if (headerRowIndex === -1) {
-      console.warn('⚠️ Cabeçalhos não encontrados, usando estrutura padrão');
+      console.error('❌ Cabeçalhos não encontrados!');
+      console.log('🔍 Todas as linhas:', rawData);
       return [];
     }
 
     // Process data rows
     const dataRows = rawData.slice(headerRowIndex + 1);
     console.log('📊 Processando', dataRows.length, 'linhas de dados');
+    console.log('🔍 Primeiras 3 linhas de dados:', dataRows.slice(0, 3));
     
     const processedData = dataRows
       .map((row, index) => {
         // Skip empty rows
         if (!row || !Array.isArray(row) || row.every(cell => !cell || cell === '')) {
+          console.log(`⏭️  Linha ${index} ignorada: vazia`);
           return null;
         }
 
         const obj: any = { id: Date.now() + index };
         let hasData = false;
+        
+        console.log(`\n🔍 Processando linha ${index}:`, row);
         
         headers.forEach((header, colIndex) => {
           const value = row[colIndex];
@@ -312,15 +319,30 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
 
         // Only return rows with actual data
         if (!hasData || !obj.tipo || !obj.descricao || !obj.valor) {
+          console.log(`❌ Linha ${index} ignorada - Faltando dados:`, {
+            hasData,
+            tipo: obj.tipo,
+            descricao: obj.descricao,
+            valor: obj.valor
+          });
           return null;
         }
 
         // Ensure all required fields exist
-        if (!obj.data) obj.data = new Date().toISOString().split('T')[0];
-        if (!obj.mes) obj.mes = new Date().toLocaleDateString('pt-BR', { month: 'long' });
-        if (!obj.ano) obj.ano = new Date().getFullYear();
+        if (!obj.data) {
+          console.warn(`⚠️  Linha ${index}: data ausente, usando data atual`);
+          obj.data = new Date().toISOString().split('T')[0];
+        }
+        if (!obj.mes) {
+          console.warn(`⚠️  Linha ${index}: mês ausente, usando mês atual`);
+          obj.mes = new Date().toLocaleDateString('pt-BR', { month: 'long' });
+        }
+        if (!obj.ano) {
+          console.warn(`⚠️  Linha ${index}: ano ausente, usando ano atual`);
+          obj.ano = new Date().getFullYear();
+        }
         
-        console.log('✅ Linha processada:', obj);
+        console.log(`✅ Linha ${index} processada com sucesso:`, obj);
         return obj;
       })
       .filter(item => item !== null);
