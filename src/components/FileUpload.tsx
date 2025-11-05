@@ -166,15 +166,16 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     for (let i = 0; i < rawData.length; i++) {
       const row = rawData[i];
       if (row && Array.isArray(row)) {
-        const hasRequiredColumns = row.some(cell => 
-          cell && typeof cell === 'string' && 
-          cell.toLowerCase().includes('data')
-        ) && row.some(cell => 
-          cell && typeof cell === 'string' && 
-          cell.toLowerCase().includes('tipo')
+        // Normalizar células para comparação
+        const normalizedCells = row.map(cell => 
+          cell ? String(cell).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : ''
         );
         
-        if (hasRequiredColumns) {
+        const hasData = normalizedCells.some(cell => cell.includes('data'));
+        const hasTipo = normalizedCells.some(cell => cell.includes('tipo'));
+        const hasValor = normalizedCells.some(cell => cell.includes('valor'));
+        
+        if (hasData && hasTipo && hasValor) {
           headerRowIndex = i;
           headers = row.map((h: any) => h ? String(h).trim() : '');
           console.log('📋 Cabeçalhos encontrados na linha', i, ':', headers);
@@ -206,9 +207,11 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
           const value = row[colIndex];
           if (!header) return;
           
+          // Normalizar header removendo acentos para comparação mais flexível
           const lowerHeader = header.toLowerCase();
+          const normalizedHeader = lowerHeader.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
           
-          if (lowerHeader.includes('data')) {
+          if (normalizedHeader.includes('data')) {
             if (value) {
               // Handle Excel date format
               let dateValue;
@@ -245,7 +248,7 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
                 hasData = true;
               }
             }
-          } else if (lowerHeader.includes('tipo')) {
+          } else if (normalizedHeader.includes('tipo')) {
             if (value) {
               let tipo = String(value).trim();
               // Normalize type - aceita Entrada/Saída e Receita/Despesa
@@ -254,19 +257,19 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
               obj.tipo = tipo;
               hasData = true;
             }
-          } else if (lowerHeader.includes('descrição') || lowerHeader.includes('descricao')) {
+          } else if (normalizedHeader.includes('descricao')) {
             if (value) {
               obj.descricao = String(value).trim();
               hasData = true;
             }
-          } else if (lowerHeader.includes('categoria')) {
+          } else if (normalizedHeader.includes('categoria')) {
             if (value) {
               const categoriaValue = String(value).trim();
               if (categoriaValue && categoriaValue !== '') {
                 obj.categoria = categoriaValue;
               }
             }
-          } else if (lowerHeader.includes('mês') || lowerHeader.includes('mes')) {
+          } else if (normalizedHeader.includes('mes')) {
             if (value) {
               const mesValue = String(value).trim();
               // Converter siglas de mês para nome completo
@@ -277,11 +280,11 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
               };
               obj.mes = mesesMap[mesValue.toUpperCase()] || mesValue;
             }
-          } else if (lowerHeader.includes('ano')) {
+          } else if (normalizedHeader.includes('ano')) {
             if (value) {
               obj.ano = parseInt(String(value));
             }
-          } else if (lowerHeader.includes('valor')) {
+          } else if (normalizedHeader.includes('valor')) {
             if (value !== undefined && value !== null && value !== '') {
               // Handle different value formats
               let valorStr = String(value);
