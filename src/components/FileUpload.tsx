@@ -324,34 +324,43 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
               obj.ano = parseInt(String(value));
             }
           } else if (normalizedHeader.includes('valor')) {
-            if (value !== undefined && value !== null && value !== '') {
+            // Aceitar qualquer valor, incluindo vazio, zero ou string vazia
+            if (value !== undefined && value !== null) {
               // Handle different value formats
-              let valorStr = String(value);
+              let valorStr = String(value).trim();
               
-              // Remove R$, spaces, and convert to number
-              // Format can be: R$ 1,000.00 or R$ 1.000,00 or 1000.00 or 1.000,00
-              valorStr = valorStr.replace(/R\$/g, '').replace(/\s/g, '').trim();
-              
-              // Detectar formato: se tem vírgula, assumir formato brasileiro (1.000,00)
-              // Se tem apenas ponto, assumir formato americano (1000.00)
-              if (valorStr.includes(',')) {
-                // Formato brasileiro: remover pontos (separadores de milhares) e trocar vírgula por ponto
-                valorStr = valorStr.replace(/\./g, '').replace(',', '.');
-              }
-              // Se tiver apenas ponto, já está em formato correto para parseFloat
-              
-              const numero = parseFloat(valorStr);
-              if (!isNaN(numero) && numero > 0) {
-                obj.valor = Math.abs(numero);
-                hasData = true;
+              // Se vazio, atribuir 0
+              if (valorStr === '' || valorStr === 'R$' || valorStr === 'R$ ') {
+                obj.valor = 0;
+                // Não marcar como hasData para que linhas só com valor zero sejam ignoradas
+              } else {
+                // Remove R$, spaces, and convert to number
+                // Format can be: R$ 1,000.00 or R$ 1.000,00 or 1000.00 or 1.000,00
+                valorStr = valorStr.replace(/R\$/g, '').replace(/\s/g, '').trim();
+                
+                // Detectar formato: se tem vírgula, assumir formato brasileiro (1.000,00)
+                // Se tem apenas ponto, assumir formato americano (1000.00)
+                if (valorStr.includes(',')) {
+                  // Formato brasileiro: remover pontos (separadores de milhares) e trocar vírgula por ponto
+                  valorStr = valorStr.replace(/\./g, '').replace(',', '.');
+                }
+                // Se tiver apenas ponto, já está em formato correto para parseFloat
+                
+                const numero = parseFloat(valorStr);
+                if (!isNaN(numero)) {
+                  obj.valor = Math.abs(numero);
+                  if (numero > 0) {
+                    hasData = true;
+                  }
+                }
               }
             }
           }
         });
 
-        // Only return rows with actual data
-        if (!hasData || !obj.tipo || !obj.descricao || !obj.valor) {
-          console.log(`❌ Linha ${index} ignorada - Faltando dados:`, {
+        // Only return rows with actual data (ignorar linhas sem tipo, descrição ou com valor zero)
+        if (!hasData || !obj.tipo || !obj.descricao || !obj.valor || obj.valor === 0) {
+          console.log(`❌ Linha ${index} ignorada - Faltando dados ou valor zero:`, {
             hasData,
             tipo: obj.tipo,
             descricao: obj.descricao,

@@ -81,7 +81,7 @@ export const generateTemplateExcel = () => {
   // Criar planilha com estrutura exata da PlanilhaEduCaH.xlsx
   const ws = XLSX.utils.aoa_to_sheet([
     ['PLANILHA DE CONTROLE FINANCEIRO'], // Linha 1
-    [], // Linha 2
+    ['LANÇAMENTOS'], // Linha 2 - Nome da aba
     [], // Linha 3
     [], // Linha 4
     [], // Linha 5
@@ -93,7 +93,6 @@ export const generateTemplateExcel = () => {
     [], // Linha 11
     [], // Linha 12
     ['Data', 'mês', 'Ano', 'Tipo', 'Descrição', 'Valor'], // Linha 13 - Cabeçalhos
-    ['1/1/25', 'JAN', 2025, 'Entrada', 'Exemplo', 'R$ 0,00'] // Linha 14 - Exemplo com valores zerados
   ]);
 
   // Ajustar largura das colunas
