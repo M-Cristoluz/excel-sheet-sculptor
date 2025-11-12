@@ -35,11 +35,17 @@ interface DataChartsProps {
 export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
   // Calculate totals
   const totalReceitas = data
-    .filter(row => row.tipo.toLowerCase().includes('receita') || row.tipo.toLowerCase().includes('entrada'))
+    .filter(row => {
+      const tipo = row.tipo.toLowerCase();
+      return tipo.includes('receita') || tipo.includes('entrada') || tipo === 'renda extra';
+    })
     .reduce((sum, row) => sum + row.valor, 0);
 
   const totalDespesas = data
-    .filter(row => row.tipo.toLowerCase().includes('despesa') || row.tipo.toLowerCase().includes('saída'))
+    .filter(row => {
+      const tipo = row.tipo.toLowerCase();
+      return tipo.includes('despesa') || tipo.includes('saída');
+    })
     .reduce((sum, row) => sum + row.valor, 0);
 
   const saldoAtual = totalReceitas - totalDespesas;
@@ -63,17 +69,20 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
   const monthlyData = data.reduce((acc: any[], row) => {
     const mes = row.mes || 'N/A';
     const existing = acc.find(item => item.mes === mes);
+    const tipo = row.tipo.toLowerCase();
     
     if (existing) {
-      if (row.tipo.toLowerCase().includes('receita') || row.tipo.toLowerCase().includes('entrada')) {
+      if (tipo.includes('receita') || tipo.includes('entrada') || tipo === 'renda extra') {
         existing.receitas += Number(row.valor) || 0;
-      } else {
+      } else if (tipo.includes('despesa') || tipo.includes('saída')) {
         existing.despesas += Number(row.valor) || 0;
       }
       existing.saldo = existing.receitas - existing.despesas;
     } else {
-      const receitas = (row.tipo.toLowerCase().includes('receita') || row.tipo.toLowerCase().includes('entrada')) ? Number(row.valor) || 0 : 0;
-      const despesas = (row.tipo.toLowerCase().includes('despesa') || row.tipo.toLowerCase().includes('saída')) ? Number(row.valor) || 0 : 0;
+      const isReceita = tipo.includes('receita') || tipo.includes('entrada') || tipo === 'renda extra';
+      const isDespesa = tipo.includes('despesa') || tipo.includes('saída');
+      const receitas = isReceita ? Number(row.valor) || 0 : 0;
+      const despesas = isDespesa ? Number(row.valor) || 0 : 0;
       
       acc.push({
         mes,

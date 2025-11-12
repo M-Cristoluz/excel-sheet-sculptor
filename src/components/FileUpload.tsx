@@ -82,7 +82,10 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     
     // Process only expenses that don't have a category yet
     const expensesToCategorize = categorizedData.filter(
-      item => (item.tipo === 'Despesa' || item.tipo === 'Saída') && !item.categoria && item.descricao
+      item => {
+        const tipo = item.tipo.toLowerCase();
+        return (tipo === 'despesa' || tipo === 'saída') && !item.categoria && item.descricao;
+      }
     );
 
     console.log('🤖 Despesas para categorizar:', expensesToCategorize.length);
@@ -290,9 +293,10 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
           } else if (normalizedHeader.includes('tipo')) {
             if (value) {
               let tipo = String(value).trim();
-              // Normalize type - aceita Entrada/Saída e Receita/Despesa
+              // Normalize type - aceita Entrada/Saída/Receita/Despesa/Renda Extra
               if (tipo === 'Entrada') tipo = 'Receita';
               else if (tipo === 'Saída') tipo = 'Despesa';
+              // Manter "Renda Extra" como está
               obj.tipo = tipo;
               hasData = true;
             }

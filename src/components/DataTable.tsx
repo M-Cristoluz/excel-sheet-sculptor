@@ -99,9 +99,13 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
   };
 
   const getTypeBadgeVariant = (tipo: string) => {
-    return tipo.toLowerCase().includes('receita') || tipo.toLowerCase().includes('entrada') 
-      ? 'default' 
-      : 'secondary';
+    const tipoLower = tipo.toLowerCase();
+    if (tipoLower.includes('receita') || tipoLower.includes('entrada')) {
+      return 'default';
+    } else if (tipoLower === 'renda extra') {
+      return 'outline';
+    }
+    return 'secondary';
   };
 
   const formatCurrency = (value: number) => {
@@ -184,6 +188,7 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                         <SelectContent>
                           <SelectItem value="Receita">Receita</SelectItem>
                           <SelectItem value="Entrada">Entrada</SelectItem>
+                          <SelectItem value="Renda Extra">Renda Extra</SelectItem>
                           <SelectItem value="Despesa">Despesa</SelectItem>
                           <SelectItem value="Saída">Saída</SelectItem>
                         </SelectContent>
@@ -234,7 +239,9 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                     )}
                   </TableCell>
                   <TableCell className={`font-medium ${
-                    (row.tipo.toLowerCase().includes('receita') || row.tipo.toLowerCase().includes('entrada'))
+                    (row.tipo.toLowerCase().includes('receita') || 
+                     row.tipo.toLowerCase().includes('entrada') || 
+                     row.tipo.toLowerCase() === 'renda extra')
                       ? 'text-success' 
                       : 'text-danger'
                   }`}>
@@ -313,6 +320,7 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                       <SelectContent>
                         <SelectItem value="Receita">Receita</SelectItem>
                         <SelectItem value="Entrada">Entrada</SelectItem>
+                        <SelectItem value="Renda Extra">Renda Extra</SelectItem>
                         <SelectItem value="Despesa">Despesa</SelectItem>
                         <SelectItem value="Saída">Saída</SelectItem>
                       </SelectContent>

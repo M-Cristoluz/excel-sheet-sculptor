@@ -147,14 +147,36 @@ const Index = () => {
   const calculateSummary = () => {
     if (!uploadedData.length) return null;
     
-    const receitas = uploadedData.filter(item => item.tipo.toLowerCase() === 'receita').reduce((sum, item) => sum + item.valor, 0);
-    const rendaExtra = uploadedData.filter(item => item.tipo.toLowerCase() === 'renda extra').reduce((sum, item) => sum + item.valor, 0);
-    const despesas = uploadedData.filter(item => item.tipo.toLowerCase().includes('despesa')).reduce((sum, item) => sum + item.valor, 0);
+    const receitas = uploadedData.filter(item => 
+      item.tipo.toLowerCase() === 'receita' || 
+      item.tipo.toLowerCase() === 'entrada'
+    ).reduce((sum, item) => sum + item.valor, 0);
     
-    // Categorização 50/30/20
-    const essenciais = uploadedData.filter(item => item.categoria === 'Essencial').reduce((sum, item) => sum + item.valor, 0);
-    const desejos = uploadedData.filter(item => item.categoria === 'Desejo').reduce((sum, item) => sum + item.valor, 0);
-    const poupanca = uploadedData.filter(item => item.categoria === 'Poupança' || item.tipo.toLowerCase() === 'poupança' || item.tipo.toLowerCase() === 'investimento').reduce((sum, item) => sum + item.valor, 0);
+    const rendaExtra = uploadedData.filter(item => 
+      item.tipo.toLowerCase() === 'renda extra'
+    ).reduce((sum, item) => sum + item.valor, 0);
+    
+    const despesas = uploadedData.filter(item => 
+      item.tipo.toLowerCase() === 'despesa' || 
+      item.tipo.toLowerCase() === 'saída'
+    ).reduce((sum, item) => sum + item.valor, 0);
+    
+    // Categorização 50/30/20 (apenas despesas)
+    const essenciais = uploadedData.filter(item => 
+      item.categoria === 'Essencial' && 
+      (item.tipo.toLowerCase() === 'despesa' || item.tipo.toLowerCase() === 'saída')
+    ).reduce((sum, item) => sum + item.valor, 0);
+    
+    const desejos = uploadedData.filter(item => 
+      item.categoria === 'Desejo' && 
+      (item.tipo.toLowerCase() === 'despesa' || item.tipo.toLowerCase() === 'saída')
+    ).reduce((sum, item) => sum + item.valor, 0);
+    
+    const poupanca = uploadedData.filter(item => 
+      item.categoria === 'Poupança' || 
+      item.tipo.toLowerCase() === 'poupança' || 
+      item.tipo.toLowerCase() === 'investimento'
+    ).reduce((sum, item) => sum + item.valor, 0);
     
     const saldo = receitas + rendaExtra - despesas;
     

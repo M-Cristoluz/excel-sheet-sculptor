@@ -37,10 +37,11 @@ export const exportToExcel = (data: DataRow[], fileName: string = 'educash-dados
       dataFormatada = `${parseInt(dia)}/${parseInt(mes)}/${anoAbreviado}`;
     }
     
-    // Converter tipo: Receita -> Entrada, Despesa -> Saída
+    // Converter tipo: Receita -> Entrada, Despesa -> Saída, manter Renda Extra
     let tipoFormatado = row.tipo;
     if (row.tipo === 'Receita') tipoFormatado = 'Entrada';
     else if (row.tipo === 'Despesa') tipoFormatado = 'Saída';
+    // Manter 'Renda Extra' como está
     
     return {
       'Data': dataFormatada,
