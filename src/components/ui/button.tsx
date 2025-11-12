@@ -15,10 +15,10 @@ const buttonVariants = cva(
         secondary: "bg-secondary/90 text-secondary-foreground hover:bg-secondary shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:-translate-y-0.5",
         ghost: "hover:bg-accent/80 hover:text-accent-foreground backdrop-blur-sm",
         link: "text-primary underline-offset-4 hover:underline font-medium",
-        success: "bg-success text-white hover:bg-success/90 shadow-[0_4px_16px_rgba(76,175,80,0.3)] hover:shadow-[0_8px_24px_rgba(76,175,80,0.4)] hover:-translate-y-0.5",
+        success: "bg-success text-primary-foreground hover:bg-success/90 shadow-[0_4px_16px_rgba(76,175,80,0.3)] hover:shadow-[0_8px_24px_rgba(76,175,80,0.4)] hover:-translate-y-0.5",
         warning: "bg-warning text-foreground hover:bg-warning/90 shadow-[0_4px_16px_rgba(255,193,7,0.3)] hover:shadow-[0_8px_24px_rgba(255,193,7,0.4)] hover:-translate-y-0.5",
-        danger: "bg-danger text-white hover:bg-danger/90 shadow-[0_4px_16px_rgba(244,67,54,0.3)] hover:shadow-[0_8px_24px_rgba(244,67,54,0.4)] hover:-translate-y-0.5",
-        glass: "bg-white/10 backdrop-blur-xl border border-white/30 text-foreground hover:bg-white/20 shadow-[0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[0_12px_40px_rgba(31,38,135,0.2)] hover:-translate-y-0.5",
+        danger: "bg-danger text-primary-foreground hover:bg-danger/90 shadow-[0_4px_16px_rgba(244,67,54,0.3)] hover:shadow-[0_8px_24px_rgba(244,67,54,0.4)] hover:-translate-y-0.5",
+        glass: "bg-card/60 backdrop-blur-xl border border-border/50 text-foreground hover:bg-card/80 shadow-[0_8px_32px_rgba(31,38,135,0.15)] hover:shadow-[0_12px_40px_rgba(31,38,135,0.2)] hover:-translate-y-0.5 dark:bg-card/40 dark:hover:bg-card/60",
         ios: "bg-gradient-to-b from-primary to-primary/90 text-primary-foreground shadow-[0_4px_16px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:-translate-y-0.5",
       },
       size: {

@@ -152,11 +152,7 @@ const Index = () => {
   const summary = calculateSummary();
 
   return (
-    <div className={`min-h-screen transition-all duration-500 ${
-      isDarkMode 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
-        : 'bg-gradient-to-br from-background to-muted/20'
-    }`}>
+    <div className="min-h-screen transition-all duration-500 bg-gradient-to-br from-background to-muted/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Enhanced Header */}
       <EnhancedHeader 
         isDarkMode={isDarkMode}
@@ -171,7 +167,7 @@ const Index = () => {
           /* iOS-style Upload Section */
           <div className="space-y-10 animate-fadeIn">
             <div className="text-center space-y-6">
-              <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20 rounded-full backdrop-blur-sm shadow-lg">
+              <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20 rounded-full backdrop-blur-sm shadow-lg dark:from-primary/20 dark:to-accent/20 dark:border-primary/30">
                 <Sparkles className="h-4 w-4 text-primary" />
                 <span className="text-sm font-bold text-foreground font-ios">Sistema Educativo Financeiro</span>
               </div>
@@ -192,9 +188,9 @@ const Index = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <IOSCard variant="elevated" hoverable className="text-center">
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Upload className="h-8 w-8 text-white" />
+                  <Upload className="h-8 w-8 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 font-ios">1. Upload Excel</h3>
+                <h3 className="text-xl font-bold mb-2 font-ios text-foreground">1. Upload Excel</h3>
                 <p className="text-sm text-muted-foreground font-ios">
                   Carregue sua planilha financeira (.xlsx ou .xls)
                 </p>
@@ -204,7 +200,7 @@ const Index = () => {
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-success to-success/70 rounded-2xl flex items-center justify-center shadow-lg">
                   <BarChart3 className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 font-ios">2. Visualize Dados</h3>
+                <h3 className="text-xl font-bold mb-2 font-ios text-foreground">2. Visualize Dados</h3>
                 <p className="text-sm text-muted-foreground font-ios">
                   Analise com gráficos interativos e dashboards
                 </p>
@@ -214,7 +210,7 @@ const Index = () => {
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-warning to-warning/70 rounded-2xl flex items-center justify-center shadow-lg">
                   <Table className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 font-ios">3. Edite Online</h3>
+                <h3 className="text-xl font-bold mb-2 font-ios text-foreground">3. Edite Online</h3>
                 <p className="text-sm text-muted-foreground font-ios">
                   Modifique dados diretamente pela interface
                 </p>
@@ -363,7 +359,7 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" className="space-y-6">
-              <TabsList className={`grid w-full grid-cols-2 max-w-md ${isDarkMode ? 'glass-effect' : ''}`}>
+              <TabsList className="grid w-full grid-cols-2 max-w-md bg-muted dark:bg-muted/50">
                 <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
                   <BarChart3 className="h-4 w-4" />
                   Gráficos
@@ -387,9 +383,7 @@ const Index = () => {
       </main>
 
       {/* Enhanced Footer */}
-      <footer className={`border-t mt-16 transition-all duration-500 ${
-        isDarkMode ? 'bg-gray-900/50 glass-effect' : 'bg-secondary/50'
-      }`}>
+      <footer className="border-t mt-16 transition-all duration-500 bg-secondary/50 dark:bg-gray-900/50 dark:backdrop-blur-xl">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">

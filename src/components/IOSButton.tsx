@@ -25,8 +25,8 @@ const IOSButton = forwardRef<HTMLButtonElement, IOSButtonProps>(
     const variants = {
       primary: "bg-gradient-to-b from-primary to-primary/90 text-primary-foreground shadow-[0_4px_16px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:-translate-y-1",
       secondary: "bg-gradient-to-b from-secondary to-secondary/90 text-secondary-foreground shadow-[0_4px_16px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] hover:-translate-y-1",
-      success: "bg-gradient-to-b from-success to-success/90 text-white shadow-[0_4px_16px_rgba(76,175,80,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(76,175,80,0.4)] hover:-translate-y-1",
-      danger: "bg-gradient-to-b from-danger to-danger/90 text-white shadow-[0_4px_16px_rgba(244,67,54,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(244,67,54,0.4)] hover:-translate-y-1",
+      success: "bg-gradient-to-b from-success to-success/90 text-primary-foreground shadow-[0_4px_16px_rgba(76,175,80,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(76,175,80,0.4)] hover:-translate-y-1",
+      danger: "bg-gradient-to-b from-danger to-danger/90 text-primary-foreground shadow-[0_4px_16px_rgba(244,67,54,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_8px_24px_rgba(244,67,54,0.4)] hover:-translate-y-1",
       ghost: "bg-transparent hover:bg-accent/10 text-foreground",
     };
 

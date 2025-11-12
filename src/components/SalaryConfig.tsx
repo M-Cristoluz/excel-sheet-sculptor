@@ -82,7 +82,7 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
   };
 
   return (
-    <Card className={`glass-effect border-primary/20 ${isDarkMode ? 'bg-card/90' : 'bg-background/90'}`}>
+    <Card className="glass-effect border-primary/20 bg-background/90 dark:bg-card/90">
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 font-ios">
           <DollarSign className="h-5 w-5 text-primary" />

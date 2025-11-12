@@ -101,9 +101,7 @@ const EducationalTips = ({ expenses, salary, isDarkMode }: EducationalTipsProps)
     <Card className={`glass-card animate-slideInUp border-2 ${getBgColor()}`}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg ${
-            isDarkMode ? 'bg-background/50' : 'bg-white/50'
-          }`}>
+          <div className="p-2 rounded-lg bg-card/50 backdrop-blur-sm">
             <Lightbulb className={`h-5 w-5 ${getIconColor()}`} />
           </div>
           

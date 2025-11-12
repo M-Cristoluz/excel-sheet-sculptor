@@ -100,9 +100,7 @@ const GamificationPanel = ({
   const progressToNextLevel = ((xp % 1000) / 1000) * 100;
 
   return (
-    <Card className={`glass-card hover-glow animate-scaleIn border-2 ${
-      isDarkMode ? 'border-primary/20' : 'border-primary/10'
-    }`}>
+    <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/30">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5 text-warning" />
@@ -142,12 +140,8 @@ const GamificationPanel = ({
                   key={achievement.id}
                   className={`p-3 rounded-lg border transition-all duration-300 ${
                     achievement.unlocked
-                      ? isDarkMode
-                        ? 'bg-success/10 border-success/30 glow-green'
-                        : 'bg-success/5 border-success/20'
-                      : isDarkMode
-                      ? 'bg-muted/5 border-muted/20'
-                      : 'bg-muted/10 border-muted/30'
+                      ? 'bg-success/5 border-success/20 dark:bg-success/10 dark:border-success/30 glow-green'
+                      : 'bg-muted/10 border-muted/30 dark:bg-muted/5 dark:border-muted/20'
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -185,11 +179,7 @@ const GamificationPanel = ({
         </div>
 
         {/* Desafio Semanal */}
-        <div className={`p-4 rounded-lg border-2 border-dashed ${
-          isDarkMode 
-            ? 'border-warning/30 bg-warning/5' 
-            : 'border-warning/40 bg-warning/10'
-        }`}>
+        <div className="p-4 rounded-lg border-2 border-dashed border-warning/40 bg-warning/10 dark:border-warning/30 dark:bg-warning/5">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="h-4 w-4 text-warning" />
             <span className="text-sm font-bold">Desafio da Semana</span>

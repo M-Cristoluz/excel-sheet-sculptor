@@ -93,7 +93,7 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
   };
 
   return (
-    <Card className={`animate-scaleIn ${isDarkMode ? 'glass-effect' : ''}`}>
+    <Card className="animate-scaleIn glass-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <CalendarDays className="h-5 w-5" />

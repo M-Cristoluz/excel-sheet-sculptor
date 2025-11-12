@@ -26,24 +26,26 @@ const StatCard = ({ title, value, change, icon: Icon, trend = 'neutral', color =
     return change > 0 ? '+' : '';
   };
 
+  const getIconColor = () => {
+    switch (color) {
+      case 'success': return 'text-success';
+      case 'danger': return 'text-danger';
+      case 'warning': return 'text-warning';
+      case 'info': return 'text-info';
+      default: return 'text-primary';
+    }
+  };
+
   return (
-    <Card className={`glass-card hover-glow animate-scaleIn border-2 ${
-      isDarkMode 
-        ? 'border-primary/20 hover:border-primary/40' 
-        : 'border-primary/10 hover:border-primary/30'
-    } ${
+    <Card className={`glass-card hover-glow animate-scaleIn border-2 border-primary/20 hover:border-primary/40 ${
       trend === 'up' && 'glow-green'
     }`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
         <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           {title}
         </CardTitle>
-        <div className={`p-2 rounded-lg ${
-          isDarkMode 
-            ? 'bg-primary/20' 
-            : 'bg-primary/10'
-        }`}>
-          <Icon className={`h-6 w-6 text-${color}`} />
+        <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20">
+          <Icon className={`h-6 w-6 ${getIconColor()}`} />
         </div>
       </CardHeader>
       <CardContent>

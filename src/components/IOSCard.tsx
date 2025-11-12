@@ -21,9 +21,9 @@ const IOSCard = forwardRef<HTMLDivElement, IOSCardProps>(
     const baseStyles = "rounded-2xl transition-all duration-300";
     
     const variants = {
-      default: "bg-card border border-border shadow-[0_4px_16px_rgba(0,0,0,0.08)]",
-      glass: "bg-white/10 backdrop-blur-xl border border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.15)]",
-      elevated: "bg-card shadow-[0_8px_24px_rgba(0,0,0,0.12)] border-none",
+      default: "bg-card border border-border shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.3)]",
+      glass: "bg-card/80 backdrop-blur-xl border border-border/50 shadow-[0_8px_32px_rgba(31,38,135,0.15)] dark:bg-card/60 dark:border-border/30",
+      elevated: "bg-card shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_24px_rgba(0,0,0,0.4)] border-none",
     };
 
     const hoverStyles = hoverable 

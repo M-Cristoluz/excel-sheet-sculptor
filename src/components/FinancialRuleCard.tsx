@@ -55,10 +55,17 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
   const status = getStatus();
   const StatusIcon = status.icon;
 
+  const getStatusColorClass = () => {
+    switch (status.color) {
+      case 'success': return 'text-success';
+      case 'warning': return 'text-warning';
+      case 'danger': return 'text-danger';
+      default: return 'text-foreground';
+    }
+  };
+
   return (
-    <Card className={`glass-card hover-glow animate-scaleIn border-2 ${
-      isDarkMode ? 'border-primary/20' : 'border-primary/10'
-    }`}>
+    <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/30">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="text-lg font-bold font-ios">Regra 50/30/20</span>
@@ -73,7 +80,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Gastos Totais</span>
-            <span className={`font-bold text-${status.color}`}>
+            <span className={`font-bold ${getStatusColorClass()}`}>
               {expensePercentage.toFixed(1)}% do salário
             </span>
           </div>
@@ -148,9 +155,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
         </div>
 
         {/* Saldo Recomendado */}
-        <div className={`p-4 rounded-lg ${
-          isDarkMode ? 'bg-primary/10' : 'bg-primary/5'
-        } border border-primary/20`}>
+        <div className="p-4 rounded-lg bg-primary/5 dark:bg-primary/10 border border-primary/20">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="h-4 w-4 text-primary" />
             <span className="text-sm font-semibold">Análise da Regra 50/30/20</span>
