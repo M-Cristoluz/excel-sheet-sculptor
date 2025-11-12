@@ -3,32 +3,39 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DollarSign, Save, Target } from "lucide-react";
+import { DollarSign, Save, Target, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+interface ExtraIncomeEntry {
+  id: number;
+  descricao: string;
+  valor: number;
+  data: string;
+}
 
 interface SalaryConfigProps {
   currentSalary: number;
-  extraIncome: number;
+  extraIncomeEntries: ExtraIncomeEntry[];
   onSalaryUpdate: (salary: number) => void;
-  onExtraIncomeUpdate: (income: number) => void;
+  onAddExtraIncome: (entry: Omit<ExtraIncomeEntry, 'id'>) => void;
+  onRemoveExtraIncome: (id: number) => void;
   isDarkMode?: boolean;
 }
 
-const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncomeUpdate, isDarkMode }: SalaryConfigProps) => {
+const SalaryConfig = ({ currentSalary, extraIncomeEntries, onSalaryUpdate, onAddExtraIncome, onRemoveExtraIncome, isDarkMode }: SalaryConfigProps) => {
   const [salary, setSalary] = useState(currentSalary.toString());
-  const [extra, setExtra] = useState(extraIncome.toString());
-  const [isEditing, setIsEditing] = useState(false);
+  const [showAddExtraForm, setShowAddExtraForm] = useState(false);
+  const [extraDescription, setExtraDescription] = useState('');
+  const [extraValue, setExtraValue] = useState('');
   const { toast } = useToast();
 
   // Update local state when props change
   useState(() => {
     setSalary(currentSalary.toString());
-    setExtra(extraIncome.toString());
   });
 
   const handleSave = () => {
     const numericSalary = parseFloat(salary.replace(/[^\d.,]/g, '').replace(',', '.'));
-    const numericExtra = parseFloat(extra.replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
     
     if (isNaN(numericSalary) || numericSalary <= 0) {
       toast({
@@ -40,24 +47,58 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
     }
 
     onSalaryUpdate(numericSalary);
-    onExtraIncomeUpdate(numericExtra);
-    setIsEditing(false);
     
     toast({
       title: "✅ Configuração salva!",
-      description: `Salário base: ${formatCurrency(numericSalary)}${numericExtra > 0 ? ` | Renda extra: ${formatCurrency(numericExtra)}` : ''}`,
+      description: `Salário base: ${formatCurrency(numericSalary)}`,
       variant: "default",
     });
   };
 
-  const handleQuickUpdateExtra = () => {
-    const numericExtra = parseFloat(extra.replace(/[^\d.,]/g, '').replace(',', '.')) || 0;
-    onExtraIncomeUpdate(numericExtra);
+  const handleAddExtraIncome = () => {
+    const numericValue = parseFloat(extraValue.replace(/[^\d.,]/g, '').replace(',', '.'));
+    
+    if (!extraDescription.trim()) {
+      toast({
+        title: "Erro",
+        description: "Por favor, insira uma descrição.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isNaN(numericValue) || numericValue <= 0) {
+      toast({
+        title: "Erro",
+        description: "Por favor, insira um valor válido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const today = new Date();
+    onAddExtraIncome({
+      descricao: extraDescription,
+      valor: numericValue,
+      data: `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear().toString().slice(-2)}`
+    });
+
+    setExtraDescription('');
+    setExtraValue('');
+    setShowAddExtraForm(false);
     
     toast({
-      title: "✅ Renda extra atualizada!",
-      description: `Valor: ${formatCurrency(numericExtra)}`,
+      title: "✅ Renda extra adicionada!",
+      description: `${extraDescription}: ${formatCurrency(numericValue)}`,
       variant: "default",
+    });
+  };
+
+  const handleRemoveExtraIncome = (id: number) => {
+    onRemoveExtraIncome(id);
+    toast({
+      title: "Renda extra removida",
+      description: "A entrada foi excluída com sucesso.",
     });
   };
 
@@ -75,6 +116,8 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
     setSalary(sanitized);
   };
 
+  const totalExtraIncome = extraIncomeEntries.reduce((sum, entry) => sum + entry.valor, 0);
+
   const rule5030220 = {
     needs: currentSalary * 0.5,
     wants: currentSalary * 0.3,
@@ -90,68 +133,21 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-3">
-            <Label htmlFor="salary" className="text-sm font-medium font-ios">
-              💼 Salário Base Mensal (R$)
-            </Label>
-            <Input
-              id="salary"
-              type="text"
-              value={salary}
-              onChange={handleInputChange}
-              placeholder="Ex: 5000.00"
-              className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
-            />
-            <p className="text-xs text-muted-foreground">
-              Seu salário fixo mensal (usado para cálculo 50/30/20)
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="extra" className="text-sm font-medium font-ios">
-                ✨ Renda Extra Mensal (R$)
-              </Label>
-              {extraIncome > 0 && !isEditing && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsEditing(true)}
-                  className="text-xs h-7 px-2"
-                >
-                  Editar
-                </Button>
-              )}
-            </div>
-            <div className="flex gap-2">
-              <Input
-                id="extra"
-                type="text"
-                value={extra}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const sanitized = value.replace(/[^\d.,]/g, '');
-                  setExtra(sanitized);
-                }}
-                placeholder="Ex: 1000.00"
-                className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
-              />
-              {isEditing && (
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleQuickUpdateExtra}
-                  className="shrink-0"
-                >
-                  <Save className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              💡 Renda adicional (freelances, bicos) - não afeta a regra 50/30/20, mas conta no saldo total
-            </p>
-          </div>
+        <div className="space-y-3">
+          <Label htmlFor="salary" className="text-sm font-medium font-ios">
+            💼 Salário Base Mensal (R$)
+          </Label>
+          <Input
+            id="salary"
+            type="text"
+            value={salary}
+            onChange={handleInputChange}
+            placeholder="Ex: 5000.00"
+            className="font-ios text-lg bg-background/50 border-primary/20 focus:border-primary/40"
+          />
+          <p className="text-xs text-muted-foreground">
+            Seu salário fixo mensal (usado para cálculo 50/30/20)
+          </p>
         </div>
 
         <Button 
@@ -161,8 +157,129 @@ const SalaryConfig = ({ currentSalary, extraIncome, onSalaryUpdate, onExtraIncom
           className="w-full"
         >
           <Save className="h-4 w-4 mr-2" />
-          Salvar Configuração
+          Salvar Salário Base
         </Button>
+
+        {/* Extra Income Section */}
+        <div className="space-y-4 p-4 bg-accent/5 rounded-xl border border-accent/20">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-sm font-medium font-ios flex items-center gap-2">
+                ✨ Rendas Extras
+              </Label>
+              <p className="text-xs text-muted-foreground mt-1">
+                Adicione freelances, bicos e outras rendas extras
+              </p>
+            </div>
+            {totalExtraIncome > 0 && (
+              <div className="text-right">
+                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-lg font-bold text-accent font-ios">{formatCurrency(totalExtraIncome)}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Extra Income List */}
+          {extraIncomeEntries.length > 0 && (
+            <div className="space-y-2 max-h-48 overflow-y-auto">
+              {extraIncomeEntries.map((entry) => (
+                <div
+                  key={entry.id}
+                  className="flex items-center justify-between p-3 bg-background/50 rounded-lg border border-border"
+                >
+                  <div className="flex-1">
+                    <p className="font-medium text-sm font-ios">{entry.descricao}</p>
+                    <p className="text-xs text-muted-foreground">{entry.data}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <p className="font-bold text-accent font-ios">{formatCurrency(entry.valor)}</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveExtraIncome(entry.id)}
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      ×
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Add New Extra Income Form */}
+          {showAddExtraForm ? (
+            <div className="space-y-3 p-4 bg-background/50 rounded-lg border border-primary/20">
+              <div className="space-y-2">
+                <Label htmlFor="extraDesc" className="text-xs font-ios">
+                  Descrição
+                </Label>
+                <Input
+                  id="extraDesc"
+                  type="text"
+                  value={extraDescription}
+                  onChange={(e) => setExtraDescription(e.target.value)}
+                  placeholder="Ex: Freelance de design"
+                  className="font-ios"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="extraVal" className="text-xs font-ios">
+                  Valor (R$)
+                </Label>
+                <Input
+                  id="extraVal"
+                  type="text"
+                  value={extraValue}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const sanitized = value.replace(/[^\d.,]/g, '');
+                    setExtraValue(sanitized);
+                  }}
+                  placeholder="Ex: 500.00"
+                  className="font-ios"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleAddExtraIncome}
+                  variant="default"
+                  size="sm"
+                  className="flex-1"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Adicionar
+                </Button>
+                <Button
+                  onClick={() => {
+                    setShowAddExtraForm(false);
+                    setExtraDescription('');
+                    setExtraValue('');
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setShowAddExtraForm(true)}
+              variant="outline"
+              size="sm"
+              className="w-full border-dashed border-2"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar Renda Extra
+            </Button>
+          )}
+
+          <p className="text-xs text-muted-foreground font-ios text-center">
+            💡 Rendas extras não afetam a regra 50/30/20, mas contam no saldo total
+          </p>
+        </div>
 
         {currentSalary > 0 && (
           <div className="space-y-4 p-4 bg-primary/5 rounded-xl border border-primary/10">

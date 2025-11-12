@@ -28,6 +28,13 @@ interface DataRow {
   categoria?: 'Essencial' | 'Desejo' | 'Poupança';
 }
 
+interface ExtraIncomeEntry {
+  id: number;
+  descricao: string;
+  valor: number;
+  data: string;
+}
+
 const Index = () => {
   const navigate = useNavigate();
   const [uploadedData, setUploadedData] = useState<DataRow[]>([]);
@@ -35,14 +42,12 @@ const Index = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [salary, setSalary] = useState<number>(0);
-  const [extraIncome, setExtraIncome] = useState<number>(0);
   const [consecutiveDaysOnBudget, setConsecutiveDaysOnBudget] = useState(0);
 
   // Load preferences
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('educash-dark-mode');
     const savedSalary = localStorage.getItem('educash-salary');
-    const savedExtra = localStorage.getItem('educash-extra-income');
     const savedDays = localStorage.getItem('educash-consecutive-days');
     
     if (savedDarkMode) {
@@ -50,9 +55,6 @@ const Index = () => {
     }
     if (savedSalary) {
       setSalary(parseFloat(savedSalary));
-    }
-    if (savedExtra) {
-      setExtraIncome(parseFloat(savedExtra));
     }
     if (savedDays) {
       setConsecutiveDaysOnBudget(parseInt(savedDays));
@@ -75,10 +77,6 @@ const Index = () => {
       localStorage.setItem('educash-salary', salary.toString());
     }
   }, [salary]);
-
-  useEffect(() => {
-    localStorage.setItem('educash-extra-income', extraIncome.toString());
-  }, [extraIncome]);
 
   useEffect(() => {
     localStorage.setItem('educash-consecutive-days', consecutiveDaysOnBudget.toString());
@@ -118,9 +116,32 @@ const Index = () => {
     setSalary(newSalary);
   };
 
-  const handleExtraIncomeUpdate = (newIncome: number) => {
-    setExtraIncome(newIncome);
+  const handleAddExtraIncome = (entry: Omit<ExtraIncomeEntry, 'id'>) => {
+    const newId = uploadedData.length > 0 ? Math.max(...uploadedData.map(d => d.id)) + 1 : 1;
+    const newTransaction: DataRow = {
+      id: newId,
+      data: entry.data,
+      tipo: 'Renda Extra',
+      descricao: entry.descricao,
+      valor: entry.valor,
+    };
+    setUploadedData(prev => [...prev, newTransaction]);
+    if (!hasData) setHasData(true);
   };
+
+  const handleRemoveExtraIncome = (id: number) => {
+    setUploadedData(prev => prev.filter(item => item.id !== id));
+  };
+
+  // Get extra income entries from transactions
+  const extraIncomeEntries: ExtraIncomeEntry[] = uploadedData
+    .filter(item => item.tipo.toLowerCase() === 'renda extra')
+    .map(item => ({
+      id: item.id,
+      descricao: item.descricao,
+      valor: item.valor,
+      data: item.data,
+    }));
 
   // Calculate summary statistics
   const calculateSummary = () => {
@@ -238,9 +259,10 @@ const Index = () => {
             {/* Salary Configuration */}
             <SalaryConfig 
               onSalaryUpdate={handleSalaryUpdate}
-              onExtraIncomeUpdate={handleExtraIncomeUpdate}
+              onAddExtraIncome={handleAddExtraIncome}
+              onRemoveExtraIncome={handleRemoveExtraIncome}
               currentSalary={salary}
-              extraIncome={extraIncome}
+              extraIncomeEntries={extraIncomeEntries}
               isDarkMode={isDarkMode}
             />
 
