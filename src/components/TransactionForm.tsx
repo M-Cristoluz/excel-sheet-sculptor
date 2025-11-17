@@ -32,6 +32,7 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
     valor: '',
     categoria: ''
   });
+  const [displayValue, setDisplayValue] = useState('');
   const [suggestedCategory, setSuggestedCategory] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -147,18 +148,19 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
               id="valor"
               type="text"
               placeholder="0,00"
-              value={formData.valor}
+              value={displayValue}
               onChange={(e) => {
                 const rawValue = e.target.value.replace(/\D/g, '');
                 if (rawValue) {
                   const numValue = parseFloat(rawValue) / 100;
                   handleChange('valor', numValue.toString());
-                  e.target.value = numValue.toLocaleString('pt-BR', { 
+                  setDisplayValue(numValue.toLocaleString('pt-BR', { 
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
-                  });
+                  }));
                 } else {
                   handleChange('valor', '');
+                  setDisplayValue('');
                 }
               }}
               required
