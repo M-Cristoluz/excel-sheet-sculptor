@@ -145,11 +145,22 @@ const TransactionForm = ({ onAddTransaction, onClose, isDarkMode }: TransactionF
             <Label htmlFor="valor">Valor (R$)</Label>
             <Input
               id="valor"
-              type="number"
-              step="0.01"
+              type="text"
               placeholder="0,00"
               value={formData.valor}
-              onChange={(e) => handleChange('valor', e.target.value)}
+              onChange={(e) => {
+                const rawValue = e.target.value.replace(/\D/g, '');
+                if (rawValue) {
+                  const numValue = parseFloat(rawValue) / 100;
+                  handleChange('valor', numValue.toString());
+                  e.target.value = numValue.toLocaleString('pt-BR', { 
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  });
+                } else {
+                  handleChange('valor', '');
+                }
+              }}
               required
             />
           </div>

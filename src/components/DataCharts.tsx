@@ -116,6 +116,11 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
     'hsl(20 85% 60%)',  // Orange
   ];
 
+  // Filter out "Exemplo" entries from visualization
+  const filteredCategoryData = categoryData.filter(item => 
+    item.name && item.name.toLowerCase() !== 'exemplo'
+  );
+
   // Calculate salary-based analysis
   const salaryAnalysis = baseSalary > 0 ? {
     spentPercentage: (totalDespesas / baseSalary) * 100,
@@ -243,48 +248,45 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div style={{ width: '100%', height: 350 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={categoryData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={(entry: any) => `${entry.name}\n${((Number(entry.percent) || 0) * 100).toFixed(1)}%`}
-                    outerRadius={100}
-                    innerRadius={40}
-                    fill="#8884d8"
-                    dataKey="value"
-                    stroke="hsl(var(--background))"
-                    strokeWidth={2}
-                  >
-                    {categoryData.map((entry, index) => (
-                      <Cell 
-                        key={`cell-${index}`} 
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    formatter={(value) => [formatCurrency(Number(value)), 'Valor']}
-                    labelStyle={{ color: 'hsl(var(--foreground))' }}
-                    contentStyle={{ 
-                      backgroundColor: 'hsl(var(--popover))', 
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
-                      fontFamily: 'SF Pro Display, -apple-system, sans-serif'
-                    }}
-                  />
-                  <Legend 
-                    wrapperStyle={{ 
-                      fontSize: '12px',
-                      fontFamily: 'SF Pro Display, -apple-system, sans-serif'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height={400}>
+              <PieChart>
+                <Pie
+                  data={filteredCategoryData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={(entry: any) => {
+                    const total = filteredCategoryData.reduce((sum, item) => sum + (item.value || 0), 0);
+                    if (total === 0) return '0%';
+                    const percent = (((entry.value || 0) / total) * 100).toFixed(0);
+                    return `${percent}%`;
+                  }}
+                  outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : typeof window !== 'undefined' && window.innerWidth < 1024 ? 100 : 120}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {filteredCategoryData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  formatter={(value) => formatCurrency(value as number)}
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    color: 'hsl(var(--foreground))'
+                  }}
+                />
+                <Legend 
+                  wrapperStyle={{ fontSize: typeof window !== 'undefined' && window.innerWidth < 768 ? '12px' : '14px' }}
+                  formatter={(value) => {
+                    const item = filteredCategoryData.find(d => d.name === value);
+                    return item ? `${value}: ${formatCurrency(item.value)}` : value;
+                  }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
 
@@ -396,18 +398,18 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
         </Card>
 
         {/* Enhanced Educational Tips */}
-        <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20 shadow-lg hover:shadow-xl transition-all duration-300 lg:col-span-2">
+        <Card className="bg-card border-border shadow-lg hover:shadow-xl transition-all duration-300 lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-accent-foreground flex items-center gap-2 font-ios">
-              <Target className="h-5 w-5" />
+            <CardTitle className="text-foreground flex items-center gap-2 font-ios">
+              <Target className="h-5 w-5 text-educash-primary" />
               💡 Análise Educativa - Regra 50/30/20
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 bg-success/10 rounded-xl border border-success/20">
+              <div className="p-4 bg-success/10 dark:bg-success/20 rounded-xl border border-success/20">
                 <div className="text-center">
-                  <div className="text-xs font-medium text-success/80 mb-2 font-ios">💸 Necessidades (50%)</div>
+                  <div className="text-xs font-medium text-foreground mb-2 font-ios">💸 Necessidades (50%)</div>
                   <div className="text-lg font-bold text-success font-ios">
                     {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.rule50) : formatCurrency(totalReceitas * 0.5)}
                   </div>
@@ -415,9 +417,9 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                 </div>
               </div>
               
-              <div className="p-4 bg-warning/10 rounded-xl border border-warning/20">
+              <div className="p-4 bg-warning/10 dark:bg-warning/20 rounded-xl border border-warning/20">
                 <div className="text-center">
-                  <div className="text-xs font-medium text-warning/80 mb-2 font-ios">🎯 Desejos (30%)</div>
+                  <div className="text-xs font-medium text-foreground mb-2 font-ios">🎯 Desejos (30%)</div>
                   <div className="text-lg font-bold text-warning font-ios">
                     {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.rule30) : formatCurrency(totalReceitas * 0.3)}
                   </div>
@@ -425,9 +427,9 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                 </div>
               </div>
               
-              <div className="p-4 bg-info/10 rounded-xl border border-info/20">
+              <div className="p-4 bg-info/10 dark:bg-info/20 rounded-xl border border-info/20">
                 <div className="text-center">
-                  <div className="text-xs font-medium text-info/80 mb-2 font-ios">💰 Poupança (20%)</div>
+                  <div className="text-xs font-medium text-foreground mb-2 font-ios">💰 Poupança (20%)</div>
                   <div className="text-lg font-bold text-info font-ios">
                     {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.rule20) : formatCurrency(totalReceitas * 0.2)}
                   </div>
@@ -438,9 +440,9 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
 
             <div className="space-y-3">
               {baseSalary > 0 && salaryAnalysis ? (
-                <div className="p-4 bg-background/50 rounded-xl border border-primary/10">
-                  <h4 className="font-medium text-primary mb-3 font-ios">📊 Análise Baseada no seu Salário:</h4>
-                  <div className="space-y-2 text-sm">
+                <div className="p-4 bg-muted/50 dark:bg-muted/30 rounded-xl border border-border">
+                  <h4 className="font-medium text-foreground mb-3 font-ios">📊 Análise Baseada no seu Salário:</h4>
+                  <div className="space-y-2 text-sm text-foreground">
                     <p className="font-ios">
                       <strong>Situação Atual:</strong> {salaryAnalysis.savedPercentage >= 20 
                         ? '✅ Você está poupando adequadamente!' 
@@ -459,8 +461,8 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                   </div>
                 </div>
               ) : (
-                <div className="p-4 bg-background/50 rounded-xl border border-primary/10">
-                  <p className="text-sm text-muted-foreground font-ios">
+                <div className="p-4 bg-muted/50 dark:bg-muted/30 rounded-xl border border-border">
+                  <p className="text-sm text-foreground font-ios">
                     💡 <strong>Dica:</strong> {saldoAtual >= (totalReceitas * 0.2) 
                       ? '✅ Parabéns! Você está poupando adequadamente com base nas suas receitas.' 
                       : '⚠️ Configure seu salário base para uma análise mais precisa dos seus gastos.'}
