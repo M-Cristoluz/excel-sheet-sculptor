@@ -16,6 +16,8 @@ import GamificationPanel from "@/components/GamificationPanel";
 import EducationalTips from "@/components/EducationalTips";
 import IOSButton from "@/components/IOSButton";
 import IOSCard from "@/components/IOSCard";
+import { PeriodFilter, PeriodType } from "@/components/PeriodFilter";
+import { filterDataByPeriod, getPeriodLabel } from "@/utils/dateFilters";
 
 interface DataRow {
   id: number;
@@ -43,6 +45,7 @@ const Index = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [salary, setSalary] = useState<number>(0);
   const [consecutiveDaysOnBudget, setConsecutiveDaysOnBudget] = useState(0);
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('all');
 
   // Load preferences
   useEffect(() => {
@@ -92,7 +95,14 @@ const Index = () => {
   };
 
   const handleDataChange = (newData: DataRow[]) => {
-    setUploadedData(newData);
+    // When table is filtered, we need to merge changes with full dataset
+    if (selectedPeriod !== 'all') {
+      const filteredIds = new Set(filteredData.map(item => item.id));
+      const unchangedData = uploadedData.filter(item => !filteredIds.has(item.id));
+      setUploadedData([...unchangedData, ...newData]);
+    } else {
+      setUploadedData(newData);
+    }
   };
 
   const resetData = () => {
@@ -143,36 +153,39 @@ const Index = () => {
       data: item.data,
     }));
 
+  // Filter data by selected period
+  const filteredData = filterDataByPeriod(uploadedData, selectedPeriod);
+
   // Calculate summary statistics
   const calculateSummary = () => {
-    if (!uploadedData.length) return null;
+    if (!filteredData.length) return null;
     
-    const receitas = uploadedData.filter(item => 
+    const receitas = filteredData.filter(item =>
       item.tipo.toLowerCase() === 'receita' || 
       item.tipo.toLowerCase() === 'entrada'
     ).reduce((sum, item) => sum + item.valor, 0);
     
-    const rendaExtra = uploadedData.filter(item => 
+    const rendaExtra = filteredData.filter(item => 
       item.tipo.toLowerCase() === 'renda extra'
     ).reduce((sum, item) => sum + item.valor, 0);
     
-    const despesas = uploadedData.filter(item => 
+    const despesas = filteredData.filter(item => 
       item.tipo.toLowerCase() === 'despesa' || 
       item.tipo.toLowerCase() === 'saída'
     ).reduce((sum, item) => sum + item.valor, 0);
     
     // Categorização 50/30/20 (apenas despesas)
-    const essenciais = uploadedData.filter(item => 
+    const essenciais = filteredData.filter(item => 
       item.categoria === 'Essencial' && 
       (item.tipo.toLowerCase() === 'despesa' || item.tipo.toLowerCase() === 'saída')
     ).reduce((sum, item) => sum + item.valor, 0);
     
-    const desejos = uploadedData.filter(item => 
+    const desejos = filteredData.filter(item => 
       item.categoria === 'Desejo' && 
       (item.tipo.toLowerCase() === 'despesa' || item.tipo.toLowerCase() === 'saída')
     ).reduce((sum, item) => sum + item.valor, 0);
     
-    const poupanca = uploadedData.filter(item => 
+    const poupanca = filteredData.filter(item => 
       item.categoria === 'Poupança' || 
       item.tipo.toLowerCase() === 'poupança' || 
       item.tipo.toLowerCase() === 'investimento'
@@ -185,7 +198,7 @@ const Index = () => {
       rendaExtra,
       despesas,
       saldo,
-      totalTransactions: uploadedData.length,
+      totalTransactions: filteredData.length,
       essenciais,
       desejos,
       poupanca
@@ -402,6 +415,20 @@ const Index = () => {
               />
             )}
 
+            {/* Period Filter */}
+            <PeriodFilter 
+              selectedPeriod={selectedPeriod}
+              onPeriodChange={setSelectedPeriod}
+            />
+
+            {selectedPeriod !== 'all' && (
+              <div className="flex items-center justify-center">
+                <Badge variant="outline" className="text-sm px-4 py-2">
+                  📅 Visualizando: {getPeriodLabel(selectedPeriod)} ({filteredData.length} transações)
+                </Badge>
+              </div>
+            )}
+
             <Tabs defaultValue="charts" className="space-y-6">
               <TabsList className="grid w-full grid-cols-2 max-w-md bg-muted dark:bg-muted/50">
                 <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
@@ -415,11 +442,11 @@ const Index = () => {
               </TabsList>
 
               <TabsContent value="charts" className="space-y-6">
-                <DataCharts data={uploadedData} />
+                <DataCharts data={filteredData} baseSalary={salary} />
               </TabsContent>
 
               <TabsContent value="table" className="space-y-6">
-                <DataTable data={uploadedData} onDataChange={handleDataChange} />
+                <DataTable data={filteredData} onDataChange={handleDataChange} />
               </TabsContent>
             </Tabs>
           </div>
