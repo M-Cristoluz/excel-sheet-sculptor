@@ -154,10 +154,32 @@ const Index = () => {
       data: item.data,
     }));
 
-  // Filter data by selected period
+  // Calculate financial summary based on filtered data
   const filteredData = filterDataByPeriod(uploadedData, selectedPeriod);
+  
+  // Filter out "Exemplo" from summary calculations
+  const validFilteredData = filteredData.filter(row => 
+    row.descricao && row.descricao.toLowerCase() !== 'exemplo'
+  );
+  
+  // Receitas são todas as entradas de dinheiro
+  const totalReceitas = validFilteredData
+    .filter(row => {
+      const tipo = row.tipo?.toLowerCase() || '';
+      return tipo.includes('receita') || tipo.includes('entrada') || tipo === 'renda extra';
+    })
+    .reduce((sum, row) => sum + (row.valor || 0), 0);
 
-  // Calculate summary statistics
+  // Despesas são todas as saídas de dinheiro
+  const totalDespesas = validFilteredData
+    .filter(row => {
+      const tipo = row.tipo?.toLowerCase() || '';
+      return tipo.includes('despesa') || tipo.includes('saída');
+    })
+    .reduce((sum, row) => sum + (row.valor || 0), 0);
+
+  // Saldo = Total de Receitas - Total de Despesas
+  const saldoAtual = totalReceitas - totalDespesas;
   const calculateSummary = () => {
     if (!filteredData.length) return null;
     
@@ -294,25 +316,19 @@ const Index = () => {
           <div className="space-y-6 animate-fadeIn">
             {/* Salary Configuration */}
             <SalaryConfig 
+              currentSalary={salary}
+              extraIncomeEntries={extraIncomeEntries}
               onSalaryUpdate={handleSalaryUpdate}
               onAddExtraIncome={handleAddExtraIncome}
               onRemoveExtraIncome={handleRemoveExtraIncome}
-              currentSalary={salary}
-              extraIncomeEntries={extraIncomeEntries}
               isDarkMode={isDarkMode}
             />
 
-            {/* Category Cache Manager */}
-            <CategoryCacheManager />
-
-            {/* Educational Tips */}
-            {salary > 0 && summary && (
-              <EducationalTips 
-                expenses={summary.despesas}
-                salary={salary}
-                isDarkMode={isDarkMode}
-              />
-            )}
+            <EducationalTips 
+              expenses={totalDespesas}
+              salary={salary}
+              isDarkMode={isDarkMode}
+            />
 
             {/* Summary Cards */}
             {summary && (
