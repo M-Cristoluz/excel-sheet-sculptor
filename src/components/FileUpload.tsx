@@ -80,6 +80,10 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
   const categorizeExpensesWithAI = async (data: any[]): Promise<any[]> => {
     const categorizedData = [...data];
     
+    // Load cache from localStorage
+    const cacheKey = 'educash-ai-categories-cache';
+    const cache: Record<string, string> = JSON.parse(localStorage.getItem(cacheKey) || '{}');
+    
     // Process only expenses that don't have a category yet
     const expensesToCategorize = categorizedData.filter(
       item => {
@@ -95,9 +99,34 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
       return categorizedData;
     }
 
+    // Apply cached categories
+    let cachedCount = 0;
+    const needsAI = expensesToCategorize.filter(item => {
+      const normalized = item.descricao.toLowerCase().trim();
+      if (cache[normalized]) {
+        item.categoria = cache[normalized];
+        cachedCount++;
+        console.log(`💾 Cache hit: "${item.descricao}" → ${cache[normalized]}`);
+        return false;
+      }
+      return true;
+    });
+
+    if (cachedCount > 0) {
+      toast({
+        title: "💾 Cache aplicado",
+        description: `${cachedCount} despesas categorizadas do cache local.`,
+      });
+    }
+
+    if (needsAI.length === 0) {
+      console.log('✅ Todas as despesas foram categorizadas via cache');
+      return categorizedData;
+    }
+
     toast({
       title: "🤖 Categorizando com IA...",
-      description: `Analisando ${expensesToCategorize.length} despesas em lotes...`,
+      description: `Analisando ${needsAI.length} novas despesas...`,
     });
 
     let successCount = 0;
@@ -142,15 +171,18 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     };
 
     // Process sequentially with delays to avoid rate limits
-    for (let i = 0; i < expensesToCategorize.length; i++) {
-      const item = expensesToCategorize[i];
+    for (let i = 0; i < needsAI.length; i++) {
+      const item = needsAI[i];
       
-      console.log(`📝 Categorizando ${i + 1}/${expensesToCategorize.length}: "${item.descricao}"`);
+      console.log(`📝 Categorizando ${i + 1}/${needsAI.length}: "${item.descricao}"`);
       
       const categoria = await categorizeWithRetry(item.descricao);
       
       if (categoria) {
         item.categoria = categoria;
+        // Save to cache
+        const normalized = item.descricao.toLowerCase().trim();
+        cache[normalized] = categoria;
         successCount++;
         console.log(`✅ "${item.descricao}" → ${categoria}`);
       } else {
@@ -158,23 +190,29 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
       }
       
       // Delay between requests (2.5 seconds to stay well under rate limits)
-      if (i < expensesToCategorize.length - 1) {
+      if (i < needsAI.length - 1) {
         await new Promise(resolve => setTimeout(resolve, 2500));
       }
     }
 
-    console.log(`🎯 Categorização concluída: ${successCount} sucesso, ${errorCount} erros`);
+    // Save updated cache to localStorage
+    localStorage.setItem(cacheKey, JSON.stringify(cache));
+    console.log(`💾 Cache atualizado com ${Object.keys(cache).length} entradas`);
 
+    console.log(`🎯 Categorização concluída: ${successCount} IA, ${cachedCount} cache, ${errorCount} erros`);
+
+    const totalCategorized = successCount + cachedCount;
+    
     if (errorCount > 0) {
       toast({
         title: "⚠️ Categorização parcial",
-        description: `${successCount} despesas categorizadas com IA. ${errorCount} precisam de categorização manual.`,
+        description: `${totalCategorized} despesas categorizadas (${successCount} IA + ${cachedCount} cache). ${errorCount} precisam de categorização manual.`,
         variant: "default",
       });
-    } else if (successCount > 0) {
+    } else if (totalCategorized > 0) {
       toast({
         title: "✅ Categorização concluída!",
-        description: `${successCount} despesas categorizadas automaticamente pela IA.`,
+        description: `${totalCategorized} despesas categorizadas (${successCount} IA + ${cachedCount} cache).`,
       });
     }
 

@@ -18,6 +18,7 @@ import IOSButton from "@/components/IOSButton";
 import IOSCard from "@/components/IOSCard";
 import { PeriodFilter, PeriodType } from "@/components/PeriodFilter";
 import { filterDataByPeriod, getPeriodLabel } from "@/utils/dateFilters";
+import { CategoryCacheManager } from "@/components/CategoryCacheManager";
 
 interface DataRow {
   id: number;
@@ -300,6 +301,9 @@ const Index = () => {
               extraIncomeEntries={extraIncomeEntries}
               isDarkMode={isDarkMode}
             />
+
+            {/* Category Cache Manager */}
+            <CategoryCacheManager />
 
             {/* Educational Tips */}
             {salary > 0 && summary && (
