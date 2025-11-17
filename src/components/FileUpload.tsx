@@ -97,7 +97,7 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
 
     toast({
       title: "🤖 Categorizando com IA...",
-      description: `Analisando ${expensesToCategorize.length} despesas...`,
+      description: `Analisando ${expensesToCategorize.length} despesas em lotes...`,
     });
 
     let successCount = 0;
