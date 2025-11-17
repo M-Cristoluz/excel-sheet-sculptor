@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Pencil, Trash2, Plus, Save, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
+import { maskCurrency } from "@/utils/maskValue";
+
 interface DataRow {
   id: number;
   data: string;
@@ -23,9 +25,10 @@ interface DataRow {
 interface DataTableProps {
   data: DataRow[];
   onDataChange: (newData: DataRow[]) => void;
+  showValues?: boolean;
 }
 
-export const DataTable = ({ data, onDataChange }: DataTableProps) => {
+export const DataTable = ({ data, onDataChange, showValues = false }: DataTableProps) => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingData, setEditingData] = useState<Partial<DataRow>>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -254,7 +257,7 @@ export const DataTable = ({ data, onDataChange }: DataTableProps) => {
                         className="h-8"
                       />
                     ) : (
-                      formatCurrency(row.valor)
+                      showValues ? formatCurrency(row.valor) : 'R$ •••,••'
                     )}
                   </TableCell>
                   <TableCell>
