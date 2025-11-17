@@ -65,10 +65,10 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
   };
 
   return (
-    <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/30">
+    <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/30 bg-card">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span className="text-lg font-bold font-ios">Regra 50/30/20</span>
+          <span className="text-lg font-bold font-ios text-foreground">Regra 50/30/20</span>
           <Badge variant={status.badge} className="gap-1">
             <StatusIcon className="h-3 w-3" />
             {status.message}
@@ -79,7 +79,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
         {/* Velocímetro de Gastos */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Gastos Totais</span>
+            <span className="text-foreground font-medium">Gastos Totais</span>
             <span className={`font-bold ${getStatusColorClass()}`}>
               {expensePercentage.toFixed(1)}% do salário
             </span>
@@ -100,13 +100,13 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Home className="h-4 w-4 text-success" />
-                <span className="text-sm font-medium">💡 Essenciais (50%)</span>
+                <span className="text-sm font-medium text-foreground">💡 Essenciais (50%)</span>
               </div>
               <div className="text-right">
                 <div className="text-sm font-bold text-success">
                   R$ {essenciais.toFixed(2)}
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-muted-foreground dark:text-muted-foreground">
                   Meta: R$ {necessitiesTarget.toFixed(2)}
                 </div>
               </div>
@@ -119,7 +119,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Heart className="h-4 w-4 text-info" />
-                <span className="text-sm font-medium">❤️ Desejos (30%)</span>
+                <span className="text-sm font-medium text-foreground">❤️ Desejos (30%)</span>
               </div>
               <div className="text-right">
                 <div className="text-sm font-bold text-info">
@@ -138,7 +138,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <PiggyBank className="h-4 w-4 text-warning" />
-                <span className="text-sm font-medium">🐷 Poupança (20%)</span>
+                <span className="text-sm font-medium text-foreground">🐷 Poupança (20%)</span>
               </div>
               <div className="text-right">
                 <div className="text-sm font-bold text-warning">
@@ -158,7 +158,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
         <div className="p-4 rounded-lg bg-primary/5 dark:bg-primary/10 border border-primary/20">
           <div className="flex items-center gap-2 mb-2">
             <TrendingUp className="h-4 w-4 text-primary" />
-            <span className="text-sm font-semibold">Análise da Regra 50/30/20</span>
+            <span className="text-sm font-semibold text-foreground">Análise da Regra 50/30/20</span>
           </div>
           {poupanca >= savingsTarget ? (
             <div className="text-sm text-success font-medium">
