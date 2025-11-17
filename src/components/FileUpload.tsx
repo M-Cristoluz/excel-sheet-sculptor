@@ -103,56 +103,78 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
     let successCount = 0;
     let errorCount = 0;
 
-    // Categorize in parallel (up to 5 at a time to avoid rate limits)
-    const batchSize = 5;
-    for (let i = 0; i < expensesToCategorize.length; i += batchSize) {
-      const batch = expensesToCategorize.slice(i, i + batchSize);
-      
-      console.log(`📦 Processando lote ${Math.floor(i/batchSize) + 1}:`, batch.map(b => b.descricao));
-      
-      await Promise.all(
-        batch.map(async (item) => {
-          try {
-            const response = await fetch(
-              `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/categorize-transaction`,
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
-                },
-                body: JSON.stringify({ descricao: item.descricao })
-              }
-            );
-
-            if (response.ok) {
-              const data = await response.json();
-              item.categoria = data.categoria;
-              successCount++;
-              console.log(`✅ "${item.descricao}" → ${data.categoria}`);
-            } else {
-              errorCount++;
-              console.error(`❌ Erro ao categorizar "${item.descricao}":`, response.status);
+    // Helper function to call AI with retry
+    const categorizeWithRetry = async (descricao: string, maxRetries = 3): Promise<string | null> => {
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/categorize-transaction`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+              },
+              body: JSON.stringify({ descricao })
             }
-          } catch (error) {
-            errorCount++;
-            console.error(`❌ Erro ao categorizar "${item.descricao}":`, error);
-          }
-        })
-      );
+          );
 
-      // Small delay between batches
-      if (i + batchSize < expensesToCategorize.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+          if (response.ok) {
+            const data = await response.json();
+            return data.categoria;
+          } else if (response.status === 429) {
+            // Rate limited - wait longer before retry
+            const waitTime = Math.min(2000 * Math.pow(2, attempt - 1), 10000);
+            console.log(`⏳ Rate limit atingido. Aguardando ${waitTime}ms antes de tentar novamente...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            continue;
+          } else {
+            console.error(`❌ Erro ${response.status} ao categorizar "${descricao}"`);
+            return null;
+          }
+        } catch (error) {
+          console.error(`❌ Erro na tentativa ${attempt} para "${descricao}":`, error);
+          if (attempt === maxRetries) return null;
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        }
+      }
+      return null;
+    };
+
+    // Process sequentially with delays to avoid rate limits
+    for (let i = 0; i < expensesToCategorize.length; i++) {
+      const item = expensesToCategorize[i];
+      
+      console.log(`📝 Categorizando ${i + 1}/${expensesToCategorize.length}: "${item.descricao}"`);
+      
+      const categoria = await categorizeWithRetry(item.descricao);
+      
+      if (categoria) {
+        item.categoria = categoria;
+        successCount++;
+        console.log(`✅ "${item.descricao}" → ${categoria}`);
+      } else {
+        errorCount++;
+      }
+      
+      // Delay between requests (2.5 seconds to stay well under rate limits)
+      if (i < expensesToCategorize.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 2500));
       }
     }
 
     console.log(`🎯 Categorização concluída: ${successCount} sucesso, ${errorCount} erros`);
 
-    if (successCount > 0) {
+    if (errorCount > 0) {
+      toast({
+        title: "⚠️ Categorização parcial",
+        description: `${successCount} despesas categorizadas com IA. ${errorCount} precisam de categorização manual.`,
+        variant: "default",
+      });
+    } else if (successCount > 0) {
       toast({
         title: "✅ Categorização concluída!",
-        description: `${successCount} despesas categorizadas com IA`,
+        description: `${successCount} despesas categorizadas automaticamente pela IA.`,
       });
     }
 
