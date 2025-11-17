@@ -33,15 +33,25 @@ interface DataChartsProps {
 }
 
 export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
+  // Filter out any invalid data entries
+  const validData = data.filter(row => 
+    row && 
+    typeof row === 'object' && 
+    row.tipo && 
+    typeof row.tipo === 'string' &&
+    row.descricao &&
+    typeof row.valor === 'number'
+  );
+
   // Calculate totals
-  const totalReceitas = data
+  const totalReceitas = validData
     .filter(row => {
       const tipo = row.tipo.toLowerCase();
       return tipo.includes('receita') || tipo.includes('entrada') || tipo === 'renda extra';
     })
     .reduce((sum, row) => sum + row.valor, 0);
 
-  const totalDespesas = data
+  const totalDespesas = validData
     .filter(row => {
       const tipo = row.tipo.toLowerCase();
       return tipo.includes('despesa') || tipo.includes('saída');
@@ -51,7 +61,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
   const saldoAtual = totalReceitas - totalDespesas;
 
   // Prepare pie chart data by category (description)
-  const categoryData = data.reduce((acc: any[], row) => {
+  const categoryData = validData.reduce((acc: any[], row) => {
     const existing = acc.find(item => item.name === row.descricao);
     if (existing) {
       existing.value += Math.abs(row.valor);
@@ -66,7 +76,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
   }, []).sort((a, b) => b.value - a.value).slice(0, 8); // Top 8 categories
 
   // Prepare monthly evolution data
-  const monthlyData = data.reduce((acc: any[], row) => {
+  const monthlyData = validData.reduce((acc: any[], row) => {
     const mes = row.mes || 'N/A';
     const existing = acc.find(item => item.mes === mes);
     const tipo = row.tipo.toLowerCase();
