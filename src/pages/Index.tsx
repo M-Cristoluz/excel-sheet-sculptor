@@ -19,6 +19,9 @@ import IOSCard from "@/components/IOSCard";
 import { PeriodFilter, PeriodType } from "@/components/PeriodFilter";
 import { filterDataByPeriod, getPeriodLabel } from "@/utils/dateFilters";
 import { CategoryCacheManager } from "@/components/CategoryCacheManager";
+import { maskCurrency, maskNumber } from "@/utils/maskValue";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DataRow {
   id: number;
@@ -47,6 +50,7 @@ const Index = () => {
   const [salary, setSalary] = useState<number>(0);
   const [consecutiveDaysOnBudget, setConsecutiveDaysOnBudget] = useState(0);
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('all');
+  const [showValues, setShowValues] = useState(false);
 
   // Load preferences
   useEffect(() => {
@@ -330,40 +334,62 @@ const Index = () => {
               isDarkMode={isDarkMode}
             />
 
-            {/* Summary Cards */}
+            {/* Privacy Toggle and Summary Cards */}
             {summary && (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <StatCard
-                  title="Total de Transações"
-                  value={summary.totalTransactions}
-                  icon={BarChart3}
-                  color="primary"
-                  isDarkMode={isDarkMode}
-                />
-                <StatCard
-                  title="Receitas"
-                  value={`R$ ${summary.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
-                  icon={TrendingUp}
-                  trend="up"
-                  color="success"
-                  isDarkMode={isDarkMode}
-                />
-                <StatCard
-                  title="Despesas"
-                  value={`R$ ${summary.despesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
-                  icon={TrendingDown}
-                  trend="down"
-                  color="danger"
-                  isDarkMode={isDarkMode}
-                />
-                <StatCard
-                  title="Saldo"
-                  value={`R$ ${summary.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`}
-                  icon={DollarSign}
-                  trend={summary.saldo >= 0 ? 'up' : 'down'}
-                  color={summary.saldo >= 0 ? 'success' : 'danger'}
-                  isDarkMode={isDarkMode}
-                />
+              <div className="space-y-4">
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowValues(!showValues)}
+                    className="gap-2"
+                  >
+                    {showValues ? (
+                      <>
+                        <EyeOff className="h-4 w-4" />
+                        Ocultar Valores
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="h-4 w-4" />
+                        Mostrar Valores
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <StatCard
+                    title="Total de Transações"
+                    value={maskNumber(summary.totalTransactions, showValues)}
+                    icon={BarChart3}
+                    color="primary"
+                    isDarkMode={isDarkMode}
+                  />
+                  <StatCard
+                    title="Receitas"
+                    value={maskCurrency(summary.receitas, showValues)}
+                    icon={TrendingUp}
+                    trend="up"
+                    color="success"
+                    isDarkMode={isDarkMode}
+                  />
+                  <StatCard
+                    title="Despesas"
+                    value={maskCurrency(summary.despesas, showValues)}
+                    icon={TrendingDown}
+                    trend="down"
+                    color="danger"
+                    isDarkMode={isDarkMode}
+                  />
+                  <StatCard
+                    title="Saldo"
+                    value={maskCurrency(summary.saldo, showValues)}
+                    icon={DollarSign}
+                    trend={summary.saldo >= 0 ? 'up' : 'down'}
+                    color={summary.saldo >= 0 ? 'success' : 'danger'}
+                    isDarkMode={isDarkMode}
+                  />
+                </div>
               </div>
             )}
 
@@ -462,11 +488,11 @@ const Index = () => {
               </TabsList>
 
               <TabsContent value="charts" className="space-y-6">
-                <DataCharts data={filteredData} baseSalary={salary} />
+                <DataCharts data={filteredData} baseSalary={salary} showValues={showValues} />
               </TabsContent>
 
               <TabsContent value="table" className="space-y-6">
-                <DataTable data={filteredData} onDataChange={handleDataChange} />
+                <DataTable data={filteredData} onDataChange={handleDataChange} showValues={showValues} />
               </TabsContent>
             </Tabs>
           </div>

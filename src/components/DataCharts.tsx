@@ -16,6 +16,7 @@ import {
   Legend 
 } from 'recharts';
 import { TrendingUp, TrendingDown, DollarSign, Target } from "lucide-react";
+import { maskCurrency } from "@/utils/maskValue";
 
 interface DataRow {
   id: number;
@@ -30,9 +31,10 @@ interface DataRow {
 interface DataChartsProps {
   data: DataRow[];
   baseSalary?: number;
+  showValues?: boolean;
 }
 
-export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
+export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataChartsProps) => {
   // Filter out any invalid data entries
   const validData = data.filter(row => 
     row && 
@@ -168,7 +170,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-success/80 font-ios">Total Receitas</p>
-                <p className="text-2xl font-bold text-success font-ios">{formatCurrency(totalReceitas)}</p>
+                <p className="text-2xl font-bold text-success font-ios">{maskCurrency(totalReceitas, showValues)}</p>
                 {baseSalary > 0 && (
                   <p className="text-xs text-muted-foreground mt-1">
                     {((totalReceitas / baseSalary) * 100).toFixed(1)}% do salário base
@@ -185,7 +187,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-danger/80 font-ios">Total Despesas</p>
-                <p className="text-2xl font-bold text-danger font-ios">{formatCurrency(totalDespesas)}</p>
+                <p className="text-2xl font-bold text-danger font-ios">{maskCurrency(totalDespesas, showValues)}</p>
                 {baseSalary > 0 && salaryAnalysis && (
                   <p className="text-xs text-muted-foreground mt-1">
                     {salaryAnalysis.spentPercentage.toFixed(1)}% do salário base
@@ -205,7 +207,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                   {baseSalary > 0 ? 'Economia Atual' : 'Saldo Atual'}
                 </p>
                 <p className={`text-2xl font-bold font-ios ${getFinancialHealthColor()}`}>
-                  {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.savedAmount) : formatCurrency(saldoAtual)}
+                  {baseSalary > 0 && salaryAnalysis ? maskCurrency(salaryAnalysis.savedAmount, showValues) : maskCurrency(saldoAtual, showValues)}
                 </p>
                 {baseSalary > 0 && salaryAnalysis && (
                   <p className="text-xs text-muted-foreground mt-1">
@@ -228,7 +230,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                 </Badge>
                 {baseSalary > 0 && salaryAnalysis && (
                   <p className="text-xs text-muted-foreground mt-2">
-                    Meta: {formatCurrency(salaryAnalysis.rule20)} (20%)
+                    Meta: {maskCurrency(salaryAnalysis.rule20, showValues)} (20%)
                   </p>
                 )}
               </div>
@@ -411,7 +413,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                 <div className="text-center">
                   <div className="text-xs font-medium text-foreground mb-2 font-ios">💸 Necessidades (50%)</div>
                   <div className="text-lg font-bold text-success font-ios">
-                    {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.rule50) : formatCurrency(totalReceitas * 0.5)}
+                    {baseSalary > 0 && salaryAnalysis ? maskCurrency(salaryAnalysis.rule50, showValues) : maskCurrency(totalReceitas * 0.5, showValues)}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">Moradia, alimentação, transporte</div>
                 </div>
@@ -421,7 +423,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                 <div className="text-center">
                   <div className="text-xs font-medium text-foreground mb-2 font-ios">🎯 Desejos (30%)</div>
                   <div className="text-lg font-bold text-warning font-ios">
-                    {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.rule30) : formatCurrency(totalReceitas * 0.3)}
+                    {baseSalary > 0 && salaryAnalysis ? maskCurrency(salaryAnalysis.rule30, showValues) : maskCurrency(totalReceitas * 0.3, showValues)}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">Lazer, compras, hobbies</div>
                 </div>
@@ -431,7 +433,7 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                 <div className="text-center">
                   <div className="text-xs font-medium text-foreground mb-2 font-ios">💰 Poupança (20%)</div>
                   <div className="text-lg font-bold text-info font-ios">
-                    {baseSalary > 0 && salaryAnalysis ? formatCurrency(salaryAnalysis.rule20) : formatCurrency(totalReceitas * 0.2)}
+                    {baseSalary > 0 && salaryAnalysis ? maskCurrency(salaryAnalysis.rule20, showValues) : maskCurrency(totalReceitas * 0.2, showValues)}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">Investimentos, emergência</div>
                 </div>
@@ -453,10 +455,10 @@ export const DataCharts = ({ data, baseSalary = 0 }: DataChartsProps) => {
                         : '🚨 Gastos excessivos - revise seu orçamento!'}
                     </p>
                     <p className="font-ios">
-                      <strong>Meta de Poupança:</strong> {formatCurrency(salaryAnalysis.rule20)} (20% do salário)
+                      <strong>Meta de Poupança:</strong> {maskCurrency(salaryAnalysis.rule20, showValues)} (20% do salário)
                     </p>
                     <p className="font-ios">
-                      <strong>Poupança Atual:</strong> {formatCurrency(salaryAnalysis.savedAmount)} ({salaryAnalysis.savedPercentage.toFixed(1)}%)
+                      <strong>Poupança Atual:</strong> {maskCurrency(salaryAnalysis.savedAmount, showValues)} ({salaryAnalysis.savedPercentage.toFixed(1)}%)
                     </p>
                   </div>
                 </div>
