@@ -99,33 +99,33 @@ const EducationalTips = ({ expenses, salary, isDarkMode }: EducationalTipsProps)
 
   return (
     <Card className={`glass-card animate-slideInUp border-2 ${getBgColor()}`}>
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-card/50 backdrop-blur-sm">
-            <Lightbulb className={`h-5 w-5 ${getIconColor()}`} />
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-start gap-2 sm:gap-3">
+          <div className="p-1.5 sm:p-2 rounded-lg bg-card/50 backdrop-blur-sm flex-shrink-0">
+            <Lightbulb className={`h-4 w-4 sm:h-5 sm:w-5 ${getIconColor()}`} />
           </div>
           
-          <div className="flex-1">
-            <div className="font-semibold text-sm mb-1">💡 Dica Educativa</div>
-            <p className="text-sm text-muted-foreground">{tip.message}</p>
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold text-xs sm:text-sm mb-1">💡 Dica Educativa</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">{tip.message}</p>
           </div>
 
-          <div className="flex gap-1">
+          <div className="flex gap-1 flex-shrink-0">
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6"
+              className="h-6 w-6 sm:h-7 sm:w-7"
               onClick={changeTip}
             >
-              <RefreshCw className="h-3 w-3" />
+              <RefreshCw className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6"
+              className="h-6 w-6 sm:h-7 sm:w-7"
               onClick={() => setVisible(false)}
             >
-              <X className="h-3 w-3" />
+              <X className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             </Button>
           </div>
         </div>

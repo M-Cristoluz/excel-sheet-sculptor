@@ -199,11 +199,11 @@ export const MicroAchievements = ({
         </div>
 
         {/* Achievements Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mt-4">
           {achievements.map((achievement) => (
             <div
               key={achievement.id}
-              className={`relative p-3 rounded-lg border-2 transition-all duration-300
+              className={`relative p-2 sm:p-3 rounded-lg border-2 transition-all duration-300
                 ${
                   achievement.unlocked
                     ? "bg-success/10 border-success/30 hover:scale-105"
@@ -218,8 +218,8 @@ export const MicroAchievements = ({
                 </Badge>
               )}
               <div className="text-center space-y-1">
-                <div className="text-3xl">{achievement.icon}</div>
-                <div className="text-xs font-semibold line-clamp-1">
+                <div className="text-2xl sm:text-3xl">{achievement.icon}</div>
+                <div className="text-[10px] sm:text-xs font-semibold line-clamp-1">
                   {achievement.title.split("!")[0]}
                 </div>
                 {achievement.unlocked && (

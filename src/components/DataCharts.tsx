@@ -249,8 +249,8 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
               📊 Distribuição por Categoria
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={400}>
+          <CardContent className="p-3 sm:p-6">
+            <ResponsiveContainer width="100%" height={typeof window !== 'undefined' && window.innerWidth < 640 ? 300 : 400}>
               <PieChart>
                 <Pie
                   data={filteredCategoryData}
@@ -263,7 +263,7 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
                     const percent = (((entry.value || 0) / total) * 100).toFixed(0);
                     return `${percent}%`;
                   }}
-                  outerRadius={typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : typeof window !== 'undefined' && window.innerWidth < 1024 ? 100 : 120}
+                  outerRadius={typeof window !== 'undefined' && window.innerWidth < 640 ? 70 : typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : typeof window !== 'undefined' && window.innerWidth < 1024 ? 100 : 120}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -299,8 +299,8 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
               📈 Receitas vs Despesas por Mês
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div style={{ width: '100%', height: 350 }}>
+          <CardContent className="p-3 sm:p-6">
+            <div style={{ width: '100%', height: typeof window !== 'undefined' && window.innerWidth < 640 ? 280 : 350 }}>
               <ResponsiveContainer>
                 <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
@@ -357,10 +357,10 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
               📉 Evolução do Saldo
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div style={{ width: '100%', height: 350 }}>
+          <CardContent className="p-3 sm:p-6">
+            <div style={{ width: '100%', height: typeof window !== 'undefined' && window.innerWidth < 640 ? 280 : 350 }}>
               <ResponsiveContainer>
-                <LineChart data={monthlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <LineChart data={monthlyData} margin={{ top: 20, right: typeof window !== 'undefined' && window.innerWidth < 640 ? 10 : 30, left: typeof window !== 'undefined' && window.innerWidth < 640 ? 0 : 20, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
                   <XAxis 
                     dataKey="mes" 

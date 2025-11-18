@@ -123,17 +123,17 @@ const GoalsManager = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-foreground font-display">Minhas Metas Financeiras</h2>
-          <p className="text-muted-foreground">Defina e acompanhe seus objetivos financeiros</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground font-display">Minhas Metas Financeiras</h2>
+          <p className="text-sm sm:text-base text-muted-foreground">Defina e acompanhe seus objetivos financeiros</p>
         </div>
-        
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2 bg-gradient-to-r from-primary to-educash-green-medium hover:opacity-90">
-              <Plus className="w-4 h-4" />
-              Nova Meta
+            <Button className="gap-2 bg-gradient-to-r from-primary to-educash-green-medium hover:opacity-90 text-sm sm:text-base px-3 sm:px-4">
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Nova Meta</span>
+              <span className="sm:hidden">Nova</span>
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
@@ -217,7 +217,7 @@ const GoalsManager = () => {
       </div>
 
       {/* Lista de Metas */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
         {goals.length === 0 ? (
           <Card className="col-span-2 p-12 text-center">
             <Target className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
