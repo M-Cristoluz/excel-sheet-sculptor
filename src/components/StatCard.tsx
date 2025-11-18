@@ -40,16 +40,16 @@ const StatCard = ({ title, value, change, icon: Icon, trend = 'neutral', color =
     <Card className={`glass-card hover-glow animate-scaleIn border-2 border-primary/20 hover:border-primary/40 ${
       trend === 'up' && 'glow-green'
     }`}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3">
+        <CardTitle className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide">
           {title}
         </CardTitle>
-        <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20">
-          <Icon className={`h-6 w-6 ${getIconColor()}`} />
+        <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 dark:bg-primary/20">
+          <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${getIconColor()}`} />
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold text-foreground font-ios">{value}</div>
+        <div className="text-2xl sm:text-3xl font-bold text-foreground font-ios">{value}</div>
         {change !== undefined && (
           <Badge 
             variant={trend === 'up' ? 'default' : trend === 'down' ? 'destructive' : 'secondary'} 

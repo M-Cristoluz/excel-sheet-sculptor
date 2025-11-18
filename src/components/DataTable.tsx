@@ -120,16 +120,16 @@ export const DataTable = ({ data, onDataChange, showValues = false }: DataTableP
 
   return (
     <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-primary">Dados da Planilha</CardTitle>
-        <Button onClick={startAdd} className="flex items-center gap-2" variant="default">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+        <CardTitle className="text-primary text-lg sm:text-xl">Dados da Planilha</CardTitle>
+        <Button onClick={startAdd} className="flex items-center gap-2 w-full sm:w-auto" variant="default">
           <Plus className="h-4 w-4" />
-          Adicionar Registro
+          <span className="sm:inline">Adicionar</span>
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
-          <Table>
+        <div className="overflow-x-auto rounded-md border">
+          <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Data</TableHead>

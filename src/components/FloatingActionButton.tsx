@@ -86,13 +86,13 @@ export const FloatingActionButton = ({ onAddTransaction }: FloatingActionButtonP
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-2xl z-50 
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 h-14 w-14 sm:h-16 sm:w-16 rounded-full shadow-2xl z-50 
                    bg-gradient-to-br from-educash-green-base to-educash-green-dark 
                    hover:scale-110 transition-all duration-300 animate-float
                    hover:shadow-[0_0_30px_rgba(34,197,94,0.6)]"
         size="icon"
       >
-        <Plus className="h-8 w-8 text-white" />
+        <Plus className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>

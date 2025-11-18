@@ -67,11 +67,12 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
   return (
     <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/30 bg-card">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="text-lg font-bold font-ios text-foreground">Regra 50/30/20</span>
-          <Badge variant={status.badge} className="gap-1">
+        <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <span className="text-base sm:text-lg font-bold font-ios text-foreground">Regra 50/30/20</span>
+          <Badge variant={status.badge} className="gap-1 text-xs">
             <StatusIcon className="h-3 w-3" />
-            {status.message}
+            <span className="hidden sm:inline">{status.message}</span>
+            <span className="sm:hidden">{status.message.split('!')[0]}</span>
           </Badge>
         </CardTitle>
       </CardHeader>
