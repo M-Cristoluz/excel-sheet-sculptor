@@ -79,6 +79,11 @@ All colors MUST be HSL.
     --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     
+    /* Microanimations & Effects */
+    --glow-success: 0 0 20px hsl(var(--success) / 0.4);
+    --glow-educash: 0 0 30px hsl(var(--educash-green-base) / 0.5);
+    --confetti-duration: 1.5s;
+    
     /* iOS-style Shadows */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
