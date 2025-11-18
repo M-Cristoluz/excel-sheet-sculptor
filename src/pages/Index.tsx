@@ -25,6 +25,9 @@ import { Button } from "@/components/ui/button";
 import Onboarding from "@/components/Onboarding";
 import GoalsManager from "@/components/GoalsManager";
 import MonthlyComparison from "@/components/MonthlyComparison";
+import AIInsights from "@/components/AIInsights";
+import ExpensePredictions from "@/components/ExpensePredictions";
+import WeeklyChallenges from "@/components/WeeklyChallenges";
 
 interface DataRow {
   id: number;
@@ -420,23 +423,31 @@ const Index = () => {
               </div>
             )}
 
-            {/* Financial Education Cards */}
+            {/* Financial Education & AI Section */}
             {salary > 0 && summary && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <FinancialRuleCard 
-                  salary={salary}
-                  expenses={summary.despesas}
-                  essenciais={summary.essenciais}
-                  desejos={summary.desejos}
-                  poupanca={summary.poupanca}
-                  isDarkMode={isDarkMode}
-                />
-                <GamificationPanel 
-                  totalTransactions={summary.totalTransactions}
-                  consecutiveDaysOnBudget={consecutiveDaysOnBudget}
-                  totalSaved={summary.saldo}
-                  isDarkMode={isDarkMode}
-                />
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <FinancialRuleCard 
+                    salary={salary}
+                    expenses={summary.despesas}
+                    essenciais={summary.essenciais}
+                    desejos={summary.desejos}
+                    poupanca={summary.poupanca}
+                    isDarkMode={isDarkMode}
+                  />
+                  <GamificationPanel 
+                    totalTransactions={summary.totalTransactions}
+                    consecutiveDaysOnBudget={consecutiveDaysOnBudget}
+                    totalSaved={summary.saldo}
+                    isDarkMode={isDarkMode}
+                  />
+                </div>
+
+                {/* AI Intelligence Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <AIInsights data={filteredData} salary={salary} />
+                  <ExpensePredictions data={uploadedData} />
+                </div>
               </div>
             )}
 
@@ -503,7 +514,7 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" className="space-y-6">
-              <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-full p-2 shadow-lg w-fit mx-auto">
+              <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-full p-2 shadow-lg w-fit mx-auto flex-wrap">
                 <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
                   <BarChart3 className="h-4 w-4" />
                   Gráficos
@@ -515,6 +526,10 @@ const Index = () => {
                 <TabsTrigger value="goals" className="flex items-center gap-2 transition-all duration-300">
                   <Target className="h-4 w-4" />
                   Metas
+                </TabsTrigger>
+                <TabsTrigger value="challenges" className="flex items-center gap-2 transition-all duration-300">
+                  <Sparkles className="h-4 w-4" />
+                  Desafios
                 </TabsTrigger>
                 <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-300">
                   <Table className="h-4 w-4" />
@@ -532,6 +547,10 @@ const Index = () => {
 
               <TabsContent value="goals" className="space-y-6 animate-fade-in">
                 <GoalsManager />
+              </TabsContent>
+
+              <TabsContent value="challenges" className="space-y-6 animate-fade-in">
+                <WeeklyChallenges />
               </TabsContent>
 
               <TabsContent value="table" className="space-y-6 animate-fade-in">
