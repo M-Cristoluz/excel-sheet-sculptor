@@ -67,6 +67,7 @@ const Index = () => {
   const [showMascot, setShowMascot] = useState(false);
   const [mascotMessage, setMascotMessage] = useState("");
   const [hasCreatedGoal, setHasCreatedGoal] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("summary");
 
   // Check if user has completed onboarding
   useEffect(() => {
@@ -571,7 +572,7 @@ const Index = () => {
               </div>
             )}
 
-            <Tabs defaultValue="charts" className="space-y-6">
+            <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-full p-2 shadow-lg w-fit mx-auto flex-wrap">
                 <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
                   <BarChart3 className="h-4 w-4" />
@@ -645,8 +646,10 @@ const Index = () => {
         <Onboarding onComplete={handleCompleteOnboarding} onSkip={handleSkipOnboarding} />
       )}
 
-      {/* Floating Action Button */}
-      <FloatingActionButton onAddTransaction={handleQuickAddTransaction} />
+      {/* Floating Action Button - Only show on table tab */}
+      {activeTab === "table" && (
+        <FloatingActionButton onAddTransaction={handleQuickAddTransaction} />
+      )}
 
       {/* Mascot Celebration */}
       <MascotCelebration
