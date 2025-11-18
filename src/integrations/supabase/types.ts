@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      financial_goals: {
+        Row: {
+          category: string
+          color: string | null
+          completed_at: string | null
+          created_at: string
+          current_amount: number | null
+          deadline: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          is_completed: boolean | null
+          target_amount: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          color?: string | null
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number | null
+          deadline?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_completed?: boolean | null
+          target_amount: number
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          color?: string | null
+          completed_at?: string | null
+          created_at?: string
+          current_amount?: number | null
+          deadline?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          is_completed?: boolean | null
+          target_amount?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_onboarding: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          has_completed: boolean | null
+          id: string
+          step_completed: number | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          has_completed?: boolean | null
+          id?: string
+          step_completed?: number | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          has_completed?: boolean | null
+          id?: string
+          step_completed?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
