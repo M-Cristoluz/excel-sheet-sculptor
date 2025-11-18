@@ -74,6 +74,9 @@ const ExpensePredictions = ({ data }: ExpensePredictionsProps) => {
   }
 
   const { nextMonth, trend, trendPercent, avgMonthly, categories, recommendations } = predictions;
+  
+  // Garantir que trendPercent é um número válido
+  const safeTrendPercent = typeof trendPercent === 'number' && !isNaN(trendPercent) ? trendPercent : 0;
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -101,30 +104,30 @@ const ExpensePredictions = ({ data }: ExpensePredictionsProps) => {
                 ) : (
                   <TrendingDown className="w-4 h-4" />
                 )}
-                <span className="text-sm font-medium">{trendPercent.toFixed(1)}%</span>
+                <span className="text-sm font-medium">{safeTrendPercent.toFixed(1)}%</span>
               </div>
             </div>
             <div className="text-3xl font-bold">
-              R$ {nextMonth.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              R$ {(nextMonth || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </div>
             <div className="text-sm text-muted-foreground">
-              Média histórica: R$ {avgMonthly.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              Média histórica: R$ {(avgMonthly || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </div>
           </div>
 
           {/* Top categorias */}
           <div className="space-y-3">
             <span className="text-sm text-muted-foreground">Top Categorias (previsto)</span>
-            {categories.slice(0, 3).map((cat) => (
+            {(categories || []).slice(0, 3).map((cat) => (
               <div key={cat.category} className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="font-medium">{cat.category}</span>
                   <span className="text-muted-foreground">
-                    R$ {cat.predicted.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {(cat.predicted || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                   </span>
                 </div>
                 <Progress 
-                  value={(cat.predicted / nextMonth) * 100} 
+                  value={nextMonth > 0 ? ((cat.predicted || 0) / nextMonth) * 100 : 0} 
                   className="h-2"
                 />
               </div>
@@ -134,7 +137,7 @@ const ExpensePredictions = ({ data }: ExpensePredictionsProps) => {
       </Card>
 
       {/* Recomendações */}
-      {recommendations.length > 0 && (
+      {recommendations && recommendations.length > 0 && (
         <Card className="p-6 bg-gradient-to-br from-accent/5 to-primary/5 border-accent/20">
           <h4 className="font-semibold mb-3 flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-primary" />
