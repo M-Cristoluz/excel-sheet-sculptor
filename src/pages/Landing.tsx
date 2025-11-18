@@ -14,7 +14,9 @@ import {
   CheckCircle2,
   Sparkles,
   Zap,
-  Instagram
+  Instagram,
+  Download,
+  Smartphone
 } from "lucide-react";
 import educashLogo from "@/assets/educash-logo.png";
 import mascot from "@/assets/mascot.jpeg";
@@ -48,6 +50,16 @@ const Landing = () => {
               <Sparkles className="mr-1 sm:mr-2 h-4 w-4 sm:h-5 sm:w-5" />
               <span className="hidden sm:inline">Acessar Plataforma</span>
               <span className="sm:hidden">Entrar</span>
+            </Button>
+          </Link>
+          <Link to="/install">
+            <Button 
+              size="sm"
+              variant="outline"
+              className="border-2 border-primary hover:bg-primary/10 transition-all duration-300 hidden sm:flex"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Instalar App
             </Button>
           </Link>
         </div>
@@ -304,6 +316,69 @@ const Landing = () => {
                 </Card>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PWA - Instale o App */}
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-primary/5 via-accent/5 to-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto">
+            <Card className="overflow-hidden border-2 border-primary/20 shadow-2xl bg-gradient-to-br from-background to-primary/5">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div className="p-8 sm:p-12 space-y-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg">
+                    <Smartphone className="h-8 w-8 text-white" />
+                  </div>
+                  
+                  <h3 className="text-3xl sm:text-4xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+                    Instale na Tela Inicial
+                  </h3>
+                  
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    Acesse o EduCA$H direto da sua tela inicial! Funciona offline, carrega rápido e oferece uma experiência como app nativo.
+                  </p>
+                  
+                  <ul className="space-y-3">
+                    {[
+                      "📱 Acesso instantâneo",
+                      "⚡ Carregamento ultrarrápido",
+                      "🔔 Notificações de desafios",
+                      "📊 Funciona offline"
+                    ].map((benefit, idx) => (
+                      <li key={idx} className="flex items-center gap-3 text-foreground">
+                        <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                        <span>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                    <Link to="/install" className="flex-1">
+                      <Button className="w-full bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 h-12 text-base">
+                        <Download className="mr-2 h-5 w-5" />
+                        Instalar Agora
+                      </Button>
+                    </Link>
+                    <Link to="/app" className="flex-1">
+                      <Button variant="outline" className="w-full h-12 text-base border-2">
+                        Ou use no navegador
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+                
+                <div className="relative h-full min-h-[400px] bg-gradient-to-br from-primary/20 to-accent/20 hidden md:flex items-center justify-center p-8">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent opacity-20 blur-3xl rounded-full"></div>
+                    <Smartphone className="w-48 h-48 text-primary relative z-10" />
+                    <div className="absolute -top-8 -right-8 bg-success text-white px-4 py-2 rounded-full text-sm font-bold shadow-xl animate-bounce">
+                      PWA
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </section>

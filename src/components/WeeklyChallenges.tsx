@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Target, Coins, Check, Lock } from "lucide-react";
 import { toast } from "sonner";
+import { SocialShare } from "@/components/SocialShare";
 
 interface Challenge {
   id: string;
@@ -84,6 +85,13 @@ const WeeklyChallenges = () => {
     toast.success(`🎉 Você ganhou ${challenge.reward} EduCoins!`, {
       description: `Total: ${newTotal} EduCoins`
     });
+    
+    // Marca que completou desafio para mostrar opção de compartilhar
+    localStorage.setItem('last-completed-challenge', JSON.stringify({
+      achievement: challenge.title,
+      coins: challenge.reward,
+      timestamp: Date.now()
+    }));
   };
 
   return (
@@ -187,6 +195,14 @@ const WeeklyChallenges = () => {
           💡 <strong>Dica:</strong> Complete desafios para ganhar EduCoins e trocar por recompensas mensais!
         </p>
       </Card>
+
+      {/* Compartilhamento Social - mostra se há conquista recente */}
+      {totalCoins > 0 && (
+        <SocialShare 
+          achievement="Desafios semanais concluídos!" 
+          coins={totalCoins}
+        />
+      )}
     </div>
   );
 };

@@ -28,6 +28,7 @@ import MonthlyComparison from "@/components/MonthlyComparison";
 import AIInsights from "@/components/AIInsights";
 import ExpensePredictions from "@/components/ExpensePredictions";
 import WeeklyChallenges from "@/components/WeeklyChallenges";
+import { usePageView, useAnalytics } from "@/hooks/useAnalytics";
 
 interface DataRow {
   id: number;
@@ -48,6 +49,8 @@ interface ExtraIncomeEntry {
 }
 
 const Index = () => {
+  usePageView('app-dashboard');
+  const { trackFileUpload, trackGoalCreated } = useAnalytics();
   const navigate = useNavigate();
   const [uploadedData, setUploadedData] = useState<DataRow[]>([]);
   const [hasData, setHasData] = useState(false);
