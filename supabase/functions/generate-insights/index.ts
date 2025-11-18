@@ -20,18 +20,27 @@ serve(async (req) => {
 
     // Preparar dados para análise
     const totalReceitas = transactions
-      .filter((t: any) => t.tipo.toLowerCase() === 'entrada')
+      .filter((t: any) => {
+        const tipo = t.tipo.toLowerCase();
+        return tipo === 'entrada' || tipo === 'receita';
+      })
       .reduce((sum: number, t: any) => sum + t.valor, 0);
     
     const totalDespesas = transactions
-      .filter((t: any) => t.tipo.toLowerCase() === 'saída' || t.tipo.toLowerCase() === 'saida')
+      .filter((t: any) => {
+        const tipo = t.tipo.toLowerCase();
+        return tipo === 'saída' || tipo === 'saida' || tipo === 'despesa';
+      })
       .reduce((sum: number, t: any) => sum + t.valor, 0);
 
     const saldo = totalReceitas - totalDespesas;
     
     // Categorias mais gastas
     const categorias = transactions
-      .filter((t: any) => t.tipo.toLowerCase() === 'saída' || t.tipo.toLowerCase() === 'saida')
+      .filter((t: any) => {
+        const tipo = t.tipo.toLowerCase();
+        return tipo === 'saída' || tipo === 'saida' || tipo === 'despesa';
+      })
       .reduce((acc: any, t: any) => {
         const cat = t.categoria || 'Sem categoria';
         acc[cat] = (acc[cat] || 0) + t.valor;
