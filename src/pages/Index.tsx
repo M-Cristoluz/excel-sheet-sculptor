@@ -5,7 +5,7 @@ import { DataTable } from "@/components/DataTable";
 import { DataCharts } from "@/components/DataCharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download, ArrowLeft, FileSpreadsheet } from "lucide-react";
+import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download, ArrowLeft, FileSpreadsheet, Target, TrendingUp as TrendingUpIcon } from "lucide-react";
 import { exportToExcel, generateTemplateExcel } from "@/utils/excelExport";
 import EnhancedHeader from "@/components/EnhancedHeader";
 import StatCard from "@/components/StatCard";
@@ -22,6 +22,9 @@ import { CategoryCacheManager } from "@/components/CategoryCacheManager";
 import { maskCurrency, maskNumber } from "@/utils/maskValue";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Onboarding from "@/components/Onboarding";
+import GoalsManager from "@/components/GoalsManager";
+import MonthlyComparison from "@/components/MonthlyComparison";
 
 interface DataRow {
   id: number;
@@ -51,6 +54,15 @@ const Index = () => {
   const [consecutiveDaysOnBudget, setConsecutiveDaysOnBudget] = useState(0);
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('all');
   const [showValues, setShowValues] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Check if user has completed onboarding
+  useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem('educash-onboarding-completed');
+    if (!hasCompletedOnboarding && !hasData) {
+      setShowOnboarding(true);
+    }
+  }, [hasData]);
 
   // Load preferences
   useEffect(() => {
@@ -234,8 +246,23 @@ const Index = () => {
 
   const summary = calculateSummary();
 
+  const handleCompleteOnboarding = () => {
+    localStorage.setItem('educash-onboarding-completed', 'true');
+    setShowOnboarding(false);
+  };
+
+  const handleSkipOnboarding = () => {
+    localStorage.setItem('educash-onboarding-completed', 'true');
+    setShowOnboarding(false);
+  };
+
   return (
     <div className="min-h-screen transition-all duration-500 bg-gradient-to-br from-background to-muted/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      {/* Onboarding */}
+      {showOnboarding && (
+        <Onboarding onComplete={handleCompleteOnboarding} onSkip={handleSkipOnboarding} />
+      )}
+
       {/* Enhanced Header */}
       <EnhancedHeader 
         isDarkMode={isDarkMode}
@@ -476,10 +503,18 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2 max-w-md bg-muted dark:bg-muted/50">
+              <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-full p-2 shadow-lg w-fit mx-auto">
                 <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
                   <BarChart3 className="h-4 w-4" />
                   Gráficos
+                </TabsTrigger>
+                <TabsTrigger value="comparison" className="flex items-center gap-2 transition-all duration-300">
+                  <TrendingUpIcon className="h-4 w-4" />
+                  Comparativo
+                </TabsTrigger>
+                <TabsTrigger value="goals" className="flex items-center gap-2 transition-all duration-300">
+                  <Target className="h-4 w-4" />
+                  Metas
                 </TabsTrigger>
                 <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-300">
                   <Table className="h-4 w-4" />
@@ -487,11 +522,19 @@ const Index = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="charts" className="space-y-6">
+              <TabsContent value="charts" className="space-y-6 animate-fade-in">
                 <DataCharts data={filteredData} baseSalary={salary} showValues={showValues} />
               </TabsContent>
 
-              <TabsContent value="table" className="space-y-6">
+              <TabsContent value="comparison" className="space-y-6 animate-fade-in">
+                <MonthlyComparison data={uploadedData} />
+              </TabsContent>
+
+              <TabsContent value="goals" className="space-y-6 animate-fade-in">
+                <GoalsManager />
+              </TabsContent>
+
+              <TabsContent value="table" className="space-y-6 animate-fade-in">
                 <DataTable data={filteredData} onDataChange={handleDataChange} showValues={showValues} />
               </TabsContent>
             </Tabs>
