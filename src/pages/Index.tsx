@@ -29,6 +29,9 @@ import AIInsights from "@/components/AIInsights";
 import ExpensePredictions from "@/components/ExpensePredictions";
 import WeeklyChallenges from "@/components/WeeklyChallenges";
 import { usePageView, useAnalytics } from "@/hooks/useAnalytics";
+import { FloatingActionButton } from "@/components/FloatingActionButton";
+import { MicroAchievements } from "@/components/MicroAchievements";
+import { MascotCelebration } from "@/components/MascotCelebration";
 
 interface DataRow {
   id: number;
@@ -61,12 +64,22 @@ const Index = () => {
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('all');
   const [showValues, setShowValues] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showMascot, setShowMascot] = useState(false);
+  const [mascotMessage, setMascotMessage] = useState("");
+  const [hasCreatedGoal, setHasCreatedGoal] = useState(false);
 
   // Check if user has completed onboarding
   useEffect(() => {
     const hasCompletedOnboarding = localStorage.getItem('educash-onboarding-completed');
     if (!hasCompletedOnboarding && !hasData) {
       setShowOnboarding(true);
+    }
+    
+    // Check if user has created goals
+    const goalsData = localStorage.getItem('educash-goals');
+    if (goalsData) {
+      const goals = JSON.parse(goalsData);
+      setHasCreatedGoal(goals.length > 0);
     }
   }, [hasData]);
 
@@ -126,6 +139,40 @@ const Index = () => {
     } else {
       setUploadedData(newData);
     }
+  };
+
+  const handleQuickAddTransaction = (transaction: {
+    tipo: string;
+    descricao: string;
+    valor: number;
+  }) => {
+    const newTransaction: DataRow = {
+      id: uploadedData.length + 1,
+      data: new Date().toLocaleDateString('pt-BR'),
+      mes: new Date().toLocaleDateString('pt-BR', { month: 'short' }).toUpperCase(),
+      ano: new Date().getFullYear(),
+      tipo: transaction.tipo,
+      descricao: transaction.descricao,
+      valor: transaction.valor,
+    };
+
+    const updatedData = [...uploadedData, newTransaction];
+    setUploadedData(updatedData);
+    setHasData(true);
+
+    // Show mascot celebration for first transaction
+    if (uploadedData.length === 0) {
+      setMascotMessage("🎉 Primeira transação registrada! Você está começando bem!");
+      setShowMascot(true);
+    } else if (uploadedData.length === 2) {
+      setMascotMessage("⭐ Ótimo! Continue registrando suas transações!");
+      setShowMascot(true);
+    } else if (uploadedData.length === 9) {
+      setMascotMessage("🚀 Você está arrasando! 10 transações registradas!");
+      setShowMascot(true);
+    }
+
+    trackFileUpload(1, 'quick-add');
   };
 
   const resetData = () => {
@@ -367,15 +414,23 @@ const Index = () => {
               isDarkMode={isDarkMode}
             />
 
+            {/* Micro Achievements */}
+            <MicroAchievements
+              transactionCount={uploadedData.length}
+              hasSetSalary={salary > 0}
+              hasCreatedGoal={hasCreatedGoal}
+              consecutiveDays={consecutiveDaysOnBudget}
+            />
+
             {/* Privacy Toggle and Summary Cards */}
             {summary && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="flex justify-end">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setShowValues(!showValues)}
-                    className="gap-2"
+                    className="gap-2 hover:scale-105 transition-transform"
                   >
                     {showValues ? (
                       <>
@@ -585,6 +640,21 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {showOnboarding && (
+        <Onboarding onComplete={handleCompleteOnboarding} onSkip={handleSkipOnboarding} />
+      )}
+
+      {/* Floating Action Button */}
+      <FloatingActionButton onAddTransaction={handleQuickAddTransaction} />
+
+      {/* Mascot Celebration */}
+      <MascotCelebration
+        show={showMascot}
+        emotion="excited"
+        message={mascotMessage}
+        onClose={() => setShowMascot(false)}
+      />
     </div>
   );
 };
