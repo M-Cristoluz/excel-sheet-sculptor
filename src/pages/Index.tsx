@@ -574,7 +574,7 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm pb-4 -mt-4 pt-4 flex justify-center">
+              <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm pb-4 pt-6 flex justify-center">
                 <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-3 shadow-lg grid grid-cols-3 gap-2 w-fit">
                   <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <BarChart3 className="h-5 w-5" />
