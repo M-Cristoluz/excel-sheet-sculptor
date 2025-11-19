@@ -65,10 +65,10 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
   };
 
   return (
-    <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/30 bg-card">
+    <Card className="glass-card hover-glow animate-scaleIn border-2 border-primary/20 dark:border-primary/40 bg-card dark:bg-card/95">
       <CardHeader>
         <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <span className="text-base sm:text-lg font-bold font-ios text-foreground">Regra 50/30/20</span>
+          <span className="text-base sm:text-lg font-bold font-ios text-foreground dark:text-foreground">Regra 50/30/20</span>
           <Badge variant={status.badge} className="gap-1 text-xs">
             <StatusIcon className="h-3 w-3" />
             <span className="hidden sm:inline">{status.message}</span>
@@ -80,7 +80,7 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
         {/* Velocímetro de Gastos */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-foreground font-medium">Gastos Totais</span>
+            <span className="text-foreground dark:text-foreground/90 font-medium">Gastos Totais</span>
             <span className={`font-bold ${getStatusColorClass()}`}>
               {expensePercentage.toFixed(1)}% do salário
             </span>
@@ -97,11 +97,11 @@ const FinancialRuleCard = ({ salary, expenses, essenciais, desejos, poupanca, is
 
         {/* Distribuição 50/30/20 - Real vs Ideal */}
         <div className="space-y-4">
-          <div className="space-y-2">
+            <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Home className="h-4 w-4 text-success" />
-                <span className="text-sm font-medium text-foreground">💡 Essenciais (50%)</span>
+                <Home className="h-4 w-4 text-success dark:text-success/90" />
+                <span className="text-sm font-medium text-foreground dark:text-foreground/90">💡 Essenciais (50%)</span>
               </div>
               <div className="text-right">
                 <div className="text-sm font-bold text-success">

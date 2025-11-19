@@ -243,9 +243,9 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pie Chart - Categories Distribution */}
-        <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+        <Card className="shadow-lg hover:shadow-xl transition-all duration-300 dark:bg-card/95">
           <CardHeader>
-            <CardTitle className="text-primary font-ios flex items-center gap-2">
+            <CardTitle className="text-primary dark:text-primary/90 font-ios flex items-center gap-2">
               📊 Distribuição por Categoria
             </CardTitle>
           </CardHeader>
