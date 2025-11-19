@@ -5,7 +5,7 @@ import { DataTable } from "@/components/DataTable";
 import { DataCharts } from "@/components/DataCharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download, ArrowLeft, FileSpreadsheet, Target, TrendingUp as TrendingUpIcon } from "lucide-react";
+import { BarChart3, Table, Upload, BookOpen, Plus, DollarSign, TrendingUp, TrendingDown, Sparkles, Download, ArrowLeft, FileSpreadsheet, Target, TrendingUp as TrendingUpIcon, CreditCard } from "lucide-react";
 import { exportToExcel, generateTemplateExcel } from "@/utils/excelExport";
 import EnhancedHeader from "@/components/EnhancedHeader";
 import StatCard from "@/components/StatCard";
@@ -32,6 +32,7 @@ import { usePageView, useAnalytics } from "@/hooks/useAnalytics";
 import { FloatingActionButton } from "@/components/FloatingActionButton";
 import { MicroAchievements } from "@/components/MicroAchievements";
 import { MascotCelebration } from "@/components/MascotCelebration";
+import { DebtsManager } from "@/components/DebtsManager";
 
 interface DataRow {
   id: number;
@@ -586,6 +587,10 @@ const Index = () => {
                   <Target className="h-4 w-4" />
                   Metas
                 </TabsTrigger>
+                <TabsTrigger value="debts" className="flex items-center gap-2 transition-all duration-300">
+                  <CreditCard className="h-4 w-4" />
+                  Dívidas
+                </TabsTrigger>
                 <TabsTrigger value="challenges" className="flex items-center gap-2 transition-all duration-300">
                   <Sparkles className="h-4 w-4" />
                   Desafios
@@ -606,6 +611,10 @@ const Index = () => {
 
               <TabsContent value="goals" className="space-y-6 animate-fade-in">
                 <GoalsManager />
+              </TabsContent>
+
+              <TabsContent value="debts" className="space-y-6 animate-fade-in">
+                <DebtsManager />
               </TabsContent>
 
               <TabsContent value="challenges" className="space-y-6 animate-fade-in">

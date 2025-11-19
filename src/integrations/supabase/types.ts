@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      debts: {
+        Row: {
+          category: string
+          created_at: string
+          creditor: string | null
+          description: string | null
+          due_day: number
+          id: string
+          installment_value: number
+          installments_paid: number
+          installments_total: number
+          interest_rate: number | null
+          is_paid_off: boolean
+          paid_off_at: string | null
+          start_date: string
+          title: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          creditor?: string | null
+          description?: string | null
+          due_day: number
+          id?: string
+          installment_value: number
+          installments_paid?: number
+          installments_total: number
+          interest_rate?: number | null
+          is_paid_off?: boolean
+          paid_off_at?: string | null
+          start_date: string
+          title: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          creditor?: string | null
+          description?: string | null
+          due_day?: number
+          id?: string
+          installment_value?: number
+          installments_paid?: number
+          installments_total?: number
+          interest_rate?: number | null
+          is_paid_off?: boolean
+          paid_off_at?: string | null
+          start_date?: string
+          title?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       financial_goals: {
         Row: {
           category: string
