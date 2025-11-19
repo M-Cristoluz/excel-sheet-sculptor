@@ -574,29 +574,29 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm pb-4 -mt-4 pt-4">
-                <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-2 shadow-lg w-auto max-w-full mx-auto grid grid-cols-3 gap-2">
-                  <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-3">
+              <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm pb-4 -mt-4 pt-4 flex justify-center">
+                <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-3 shadow-lg grid grid-cols-3 gap-2 w-fit">
+                  <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <BarChart3 className="h-5 w-5" />
                     <span>Gráficos</span>
                   </TabsTrigger>
-                  <TabsTrigger value="comparison" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-3">
+                  <TabsTrigger value="comparison" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <TrendingUpIcon className="h-5 w-5" />
                     <span>Comparativo</span>
                   </TabsTrigger>
-                  <TabsTrigger value="goals" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-3">
+                  <TabsTrigger value="goals" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <Target className="h-5 w-5" />
                     <span>Metas</span>
                   </TabsTrigger>
-                  <TabsTrigger value="debts" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-3">
+                  <TabsTrigger value="debts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <CreditCard className="h-5 w-5" />
                     <span>Dívidas</span>
                   </TabsTrigger>
-                  <TabsTrigger value="challenges" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-3">
+                  <TabsTrigger value="challenges" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <Sparkles className="h-5 w-5" />
                     <span>Desafios</span>
                   </TabsTrigger>
-                  <TabsTrigger value="table" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-3">
+                  <TabsTrigger value="table" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-3 min-w-[90px]">
                     <Table className="h-5 w-5" />
                     <span>Tabela</span>
                   </TabsTrigger>
