@@ -26,6 +26,7 @@ interface DataRow {
   tipo: string;
   descricao: string;
   valor: number;
+  categoria?: 'Essencial' | 'Desejo' | 'Poupança' | string;
 }
 
 interface DataChartsProps {
@@ -62,20 +63,27 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
 
   const saldoAtual = totalReceitas - totalDespesas;
 
-  // Prepare pie chart data by category (description)
-  const categoryData = validData.reduce((acc: any[], row) => {
-    const existing = acc.find(item => item.name === row.descricao);
+  // Prepare pie chart data ONLY for expenses, grouped by category
+  const expenseData = validData.filter(row => {
+    const tipo = row.tipo.toLowerCase();
+    return tipo.includes('despesa') || tipo.includes('saída') || tipo === 'pagamento de parcela';
+  });
+
+  const categoryData = expenseData.reduce((acc: any[], row) => {
+    const categoryName = row.categoria || 'Sem Categoria';
+    const existing = acc.find(item => item.name === categoryName);
+    
     if (existing) {
-      existing.value += Math.abs(row.valor);
+      existing.value += row.valor;
     } else {
       acc.push({
-        name: row.descricao,
-        value: Math.abs(row.valor),
+        name: categoryName,
+        value: row.valor,
         tipo: row.tipo
       });
     }
     return acc;
-  }, []).sort((a, b) => b.value - a.value).slice(0, 8); // Top 8 categories
+  }, []).sort((a, b) => b.value - a.value);
 
   // Prepare monthly evolution data
   const monthlyData = validData.reduce((acc: any[], row) => {
@@ -118,9 +126,11 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
     'hsl(20 85% 60%)',  // Orange
   ];
 
-  // Filter out "Exemplo" entries from visualization
+  // Filter out "Exemplo" and "Sem Categoria" with zero value from visualization
   const filteredCategoryData = categoryData.filter(item => 
-    item.name && item.name.toLowerCase() !== 'exemplo'
+    item.name && 
+    item.name.toLowerCase() !== 'exemplo' && 
+    item.value > 0
   );
 
   // Calculate financial analysis based on actual income
@@ -242,12 +252,15 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
 
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Pie Chart - Categories Distribution */}
+        {/* Pie Chart - Expense Categories Distribution */}
         <Card className="shadow-lg hover:shadow-xl transition-all duration-300 dark:bg-card/95">
           <CardHeader>
             <CardTitle className="text-primary dark:text-primary/90 font-ios flex items-center gap-2">
-              📊 Distribuição por Categoria
+              📊 Distribuição de Despesas por Categoria
             </CardTitle>
+            <p className="text-sm text-muted-foreground mt-1">
+              Como você está gastando seu dinheiro
+            </p>
           </CardHeader>
           <CardContent className="p-3 sm:p-6">
             <ResponsiveContainer width="100%" height={typeof window !== 'undefined' && window.innerWidth < 640 ? 300 : 400}>
@@ -258,9 +271,10 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
                   cy="50%"
                   labelLine={false}
                   label={(entry: any) => {
-                    const total = filteredCategoryData.reduce((sum, item) => sum + (item.value || 0), 0);
-                    if (total === 0) return '0%';
-                    const percent = (((entry.value || 0) / total) * 100).toFixed(0);
+                    // Calculate percentage based on total expenses only
+                    const totalExpenses = filteredCategoryData.reduce((sum, item) => sum + (item.value || 0), 0);
+                    if (totalExpenses === 0) return '0%';
+                    const percent = (((entry.value || 0) / totalExpenses) * 100).toFixed(1);
                     return `${percent}%`;
                   }}
                   outerRadius={typeof window !== 'undefined' && window.innerWidth < 640 ? 70 : typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : typeof window !== 'undefined' && window.innerWidth < 1024 ? 100 : 120}
@@ -284,7 +298,10 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
                   wrapperStyle={{ fontSize: typeof window !== 'undefined' && window.innerWidth < 768 ? '12px' : '14px' }}
                   formatter={(value) => {
                     const item = filteredCategoryData.find(d => d.name === value);
-                    return item ? `${value}: ${formatCurrency(item.value)}` : value;
+                    if (!item) return value;
+                    const totalExpenses = filteredCategoryData.reduce((sum, i) => sum + (i.value || 0), 0);
+                    const percent = totalExpenses > 0 ? ((item.value / totalExpenses) * 100).toFixed(1) : '0';
+                    return `${value}: ${formatCurrency(item.value)} (${percent}%)`;
                   }}
                 />
               </PieChart>
