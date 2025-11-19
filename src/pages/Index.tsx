@@ -575,37 +575,39 @@ const Index = () => {
 
             <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm pb-4 -mt-4 pt-4">
-                <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-2 shadow-lg w-full max-w-fit mx-auto grid grid-cols-3 md:flex md:flex-wrap gap-1">
-                  <TabsTrigger value="charts" className="flex items-center justify-center gap-1 md:gap-2 transition-all duration-300 text-xs md:text-sm px-2 md:px-4">
-                    <BarChart3 className="h-3 w-3 md:h-4 md:w-4" />
-                    <span className="hidden sm:inline">Gráficos</span>
-                    <span className="sm:hidden">Gráf.</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="comparison" className="flex items-center justify-center gap-1 md:gap-2 transition-all duration-300 text-xs md:text-sm px-2 md:px-4">
-                    <TrendingUpIcon className="h-3 w-3 md:h-4 md:w-4" />
-                    <span className="hidden sm:inline">Comparativo</span>
-                    <span className="sm:hidden">Comp.</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="goals" className="flex items-center justify-center gap-1 md:gap-2 transition-all duration-300 text-xs md:text-sm px-2 md:px-4">
-                    <Target className="h-3 w-3 md:h-4 md:w-4" />
-                    <span>Metas</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="debts" className="flex items-center justify-center gap-1 md:gap-2 transition-all duration-300 text-xs md:text-sm px-2 md:px-4">
-                    <CreditCard className="h-3 w-3 md:h-4 md:w-4" />
-                    <span className="hidden sm:inline">Dívidas</span>
-                    <span className="sm:hidden">Dív.</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="challenges" className="flex items-center justify-center gap-1 md:gap-2 transition-all duration-300 text-xs md:text-sm px-2 md:px-4">
-                    <Sparkles className="h-3 w-3 md:h-4 md:w-4" />
-                    <span className="hidden sm:inline">Desafios</span>
-                    <span className="sm:hidden">Desaf.</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="table" className="flex items-center justify-center gap-1 md:gap-2 transition-all duration-300 text-xs md:text-sm px-2 md:px-4">
-                    <Table className="h-3 w-3 md:h-4 md:w-4" />
-                    <span className="hidden sm:inline">Tabela</span>
-                    <span className="sm:hidden">Tab.</span>
-                  </TabsTrigger>
-                </TabsList>
+                <div className="overflow-x-auto scrollbar-hide px-4 -mx-4">
+                  <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-2 shadow-lg inline-flex w-auto min-w-full md:min-w-0 justify-start md:justify-center mx-auto gap-1">
+                    <TabsTrigger value="charts" className="flex items-center justify-center gap-2 transition-all duration-300 text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
+                      <BarChart3 className="h-4 w-4" />
+                      <span className="hidden sm:inline">Gráficos</span>
+                      <span className="sm:hidden">Gráf.</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="comparison" className="flex items-center justify-center gap-2 transition-all duration-300 text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
+                      <TrendingUpIcon className="h-4 w-4" />
+                      <span className="hidden sm:inline">Comparativo</span>
+                      <span className="sm:hidden">Comp.</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="goals" className="flex items-center justify-center gap-2 transition-all duration-300 text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
+                      <Target className="h-4 w-4" />
+                      <span>Metas</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="debts" className="flex items-center justify-center gap-2 transition-all duration-300 text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
+                      <CreditCard className="h-4 w-4" />
+                      <span className="hidden sm:inline">Dívidas</span>
+                      <span className="sm:hidden">Dív.</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="challenges" className="flex items-center justify-center gap-2 transition-all duration-300 text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
+                      <Sparkles className="h-4 w-4" />
+                      <span className="hidden sm:inline">Desafios</span>
+                      <span className="sm:hidden">Desaf.</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="table" className="flex items-center justify-center gap-2 transition-all duration-300 text-xs md:text-sm px-3 md:px-4 whitespace-nowrap">
+                      <Table className="h-4 w-4" />
+                      <span className="hidden sm:inline">Tabela</span>
+                      <span className="sm:hidden">Tab.</span>
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
               </div>
 
               <TabsContent value="charts" className="space-y-6 animate-fade-in">

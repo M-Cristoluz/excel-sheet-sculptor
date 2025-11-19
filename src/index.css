@@ -350,4 +350,14 @@ All colors MUST be HSL.
   .dark .glow-online {
     box-shadow: 0 0 20px hsl(var(--online-light) / 0.7);
   }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }
