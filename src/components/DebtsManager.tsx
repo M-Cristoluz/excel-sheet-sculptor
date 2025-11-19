@@ -191,9 +191,9 @@ export function DebtsManager() {
   }
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 pt-4">
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
         <Card className="p-4 bg-gradient-to-br from-primary/5 to-primary/10">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-primary/20">
@@ -233,7 +233,7 @@ export function DebtsManager() {
 
       {/* Warning for overdue debts */}
       {overdueDebts.length > 0 && (
-        <Card className="p-4 bg-destructive/10 border-destructive/20">
+        <Card className="p-4 bg-destructive/10 border-destructive/20 relative z-10">
           <div className="flex items-center gap-3">
             <AlertTriangle className="w-5 h-5 text-destructive" />
             <div>
@@ -249,7 +249,7 @@ export function DebtsManager() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between relative z-10">
         <h2 className="text-2xl font-bold text-foreground">Minhas Dívidas</h2>
         <Button onClick={() => setIsFormOpen(true)} size="sm">
           <Plus className="w-4 h-4 mr-2" />
@@ -259,7 +259,7 @@ export function DebtsManager() {
 
       {/* Debts Grid */}
       {debts.length === 0 ? (
-        <Card className="p-12 text-center">
+        <Card className="p-12 text-center relative z-10">
           <div className="flex flex-col items-center gap-4">
             <div className="p-4 rounded-full bg-primary/10">
               <TrendingDown className="w-8 h-8 text-primary" />
@@ -279,7 +279,7 @@ export function DebtsManager() {
           </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
           {debts.map((debt) => (
             <DebtCard
               key={debt.id}

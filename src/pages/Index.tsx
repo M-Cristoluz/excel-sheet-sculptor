@@ -574,32 +574,34 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-full p-2 shadow-lg w-fit mx-auto flex-wrap">
-                <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
-                  <BarChart3 className="h-4 w-4" />
-                  Gráficos
-                </TabsTrigger>
-                <TabsTrigger value="comparison" className="flex items-center gap-2 transition-all duration-300">
-                  <TrendingUpIcon className="h-4 w-4" />
-                  Comparativo
-                </TabsTrigger>
-                <TabsTrigger value="goals" className="flex items-center gap-2 transition-all duration-300">
-                  <Target className="h-4 w-4" />
-                  Metas
-                </TabsTrigger>
-                <TabsTrigger value="debts" className="flex items-center gap-2 transition-all duration-300">
-                  <CreditCard className="h-4 w-4" />
-                  Dívidas
-                </TabsTrigger>
-                <TabsTrigger value="challenges" className="flex items-center gap-2 transition-all duration-300">
-                  <Sparkles className="h-4 w-4" />
-                  Desafios
-                </TabsTrigger>
-                <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-300">
-                  <Table className="h-4 w-4" />
-                  Tabela
-                </TabsTrigger>
-              </TabsList>
+              <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm pb-4 -mt-4 pt-4">
+                <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-full p-2 shadow-lg w-fit mx-auto flex-wrap">
+                  <TabsTrigger value="charts" className="flex items-center gap-2 transition-all duration-300">
+                    <BarChart3 className="h-4 w-4" />
+                    Gráficos
+                  </TabsTrigger>
+                  <TabsTrigger value="comparison" className="flex items-center gap-2 transition-all duration-300">
+                    <TrendingUpIcon className="h-4 w-4" />
+                    Comparativo
+                  </TabsTrigger>
+                  <TabsTrigger value="goals" className="flex items-center gap-2 transition-all duration-300">
+                    <Target className="h-4 w-4" />
+                    Metas
+                  </TabsTrigger>
+                  <TabsTrigger value="debts" className="flex items-center gap-2 transition-all duration-300">
+                    <CreditCard className="h-4 w-4" />
+                    Dívidas
+                  </TabsTrigger>
+                  <TabsTrigger value="challenges" className="flex items-center gap-2 transition-all duration-300">
+                    <Sparkles className="h-4 w-4" />
+                    Desafios
+                  </TabsTrigger>
+                  <TabsTrigger value="table" className="flex items-center gap-2 transition-all duration-300">
+                    <Table className="h-4 w-4" />
+                    Tabela
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <TabsContent value="charts" className="space-y-6 animate-fade-in">
                 <DataCharts data={filteredData} baseSalary={salary} showValues={showValues} />
