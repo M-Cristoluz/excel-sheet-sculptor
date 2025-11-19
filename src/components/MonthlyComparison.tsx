@@ -92,16 +92,16 @@ const MonthlyComparison = ({ data }: MonthlyComparisonProps) => {
     const Icon = isPositive ? TrendingUp : isNegative ? TrendingDown : Minus;
 
     return (
-      <Card className="p-6 hover:shadow-lg transition-all">
+      <Card className="p-6 hover:shadow-lg transition-all dark:bg-card/95">
         <div className="space-y-4">
-          <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+          <h3 className="text-sm font-medium text-muted-foreground dark:text-muted-foreground/90">{title}</h3>
           
           <div className="flex items-end justify-between">
             <div>
-              <div className="text-3xl font-bold text-foreground">
+              <div className="text-3xl font-bold text-foreground dark:text-foreground/95">
                 R$ {currentValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </div>
-              <div className="text-sm text-muted-foreground mt-1">
+              <div className="text-sm text-muted-foreground dark:text-muted-foreground/80 mt-1">
                 Mês atual
               </div>
             </div>
