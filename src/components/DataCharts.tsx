@@ -123,12 +123,12 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
     item.name && item.name.toLowerCase() !== 'exemplo'
   );
 
-  // Calculate salary-based analysis
-  const salaryAnalysis = baseSalary > 0 ? {
-    spentPercentage: (totalDespesas / baseSalary) * 100,
-    savedAmount: baseSalary - totalDespesas,
-    savedPercentage: ((baseSalary - totalDespesas) / baseSalary) * 100,
-    rule50: baseSalary * 0.5,   // Necessidades
+  // Calculate financial analysis based on actual income
+  const salaryAnalysis = totalReceitas > 0 ? {
+    spentPercentage: (totalDespesas / totalReceitas) * 100,
+    savedAmount: totalReceitas - totalDespesas,
+    savedPercentage: ((totalReceitas - totalDespesas) / totalReceitas) * 100,
+    rule50: baseSalary * 0.5,   // Necessidades (baseado no salário base)
     rule30: baseSalary * 0.3,   // Desejos  
     rule20: baseSalary * 0.2,   // Poupança
   } : null;
@@ -171,7 +171,7 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
               <div>
                 <p className="text-sm font-medium text-success/80 font-ios">Total Receitas</p>
                 <p className="text-2xl font-bold text-success font-ios">{maskCurrency(totalReceitas, showValues)}</p>
-                {baseSalary > 0 && (
+                {baseSalary > 0 && totalReceitas > 0 && (
                   <p className="text-xs text-muted-foreground mt-1">
                     {((totalReceitas / baseSalary) * 100).toFixed(1)}% do salário base
                   </p>
@@ -188,9 +188,9 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
               <div>
                 <p className="text-sm font-medium text-danger/80 font-ios">Total Despesas</p>
                 <p className="text-2xl font-bold text-danger font-ios">{maskCurrency(totalDespesas, showValues)}</p>
-                {baseSalary > 0 && salaryAnalysis && (
+                {totalReceitas > 0 && salaryAnalysis && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    {salaryAnalysis.spentPercentage.toFixed(1)}% do salário base
+                    {salaryAnalysis.spentPercentage.toFixed(1)}% das receitas totais
                   </p>
                 )}
               </div>
