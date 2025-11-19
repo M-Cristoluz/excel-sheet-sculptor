@@ -224,7 +224,7 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-accent-foreground/80 font-ios">Status Financeiro</p>
+                <p className="text-sm font-medium text-muted-foreground font-ios">Status Financeiro</p>
                 <Badge variant={healthBadge.variant} className="text-xs mt-2 font-ios">
                   {healthBadge.text}
                 </Badge>
@@ -234,7 +234,7 @@ export const DataCharts = ({ data, baseSalary = 0, showValues = false }: DataCha
                   </p>
                 )}
               </div>
-              <Target className="h-8 w-8 text-accent-foreground" />
+              <Target className="h-8 w-8 text-foreground/70" />
             </div>
           </CardContent>
         </Card>
