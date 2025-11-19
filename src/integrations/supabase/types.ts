@@ -125,6 +125,48 @@ export type Database = {
         }
         Relationships: []
       }
+      transactions: {
+        Row: {
+          ano: number
+          categoria: string | null
+          created_at: string
+          data: string
+          descricao: string
+          id: string
+          mes: string
+          tipo: string
+          updated_at: string
+          user_id: string
+          valor: number
+        }
+        Insert: {
+          ano: number
+          categoria?: string | null
+          created_at?: string
+          data: string
+          descricao: string
+          id?: string
+          mes: string
+          tipo: string
+          updated_at?: string
+          user_id: string
+          valor: number
+        }
+        Update: {
+          ano?: number
+          categoria?: string | null
+          created_at?: string
+          data?: string
+          descricao?: string
+          id?: string
+          mes?: string
+          tipo?: string
+          updated_at?: string
+          user_id?: string
+          valor?: number
+        }
+        Relationships: []
+      }
       user_onboarding: {
         Row: {
           completed_at: string | null
@@ -154,7 +196,20 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_financial_summary: {
+        Row: {
+          desejos: number | null
+          essenciais: number | null
+          month: string | null
+          poupanca: number | null
+          saldo: number | null
+          total_despesas: number | null
+          total_receitas: number | null
+          total_transactions: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
