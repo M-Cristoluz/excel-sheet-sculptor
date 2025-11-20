@@ -1,10 +1,10 @@
 project_id = "owzllxzqgexcgtzdaeii"
 
 [functions.categorize-transaction]
-verify_jwt = false
+verify_jwt = true
 
 [functions.generate-insights]
-verify_jwt = false
+verify_jwt = true
 
 [functions.predict-expenses]
-verify_jwt = false
+verify_jwt = true

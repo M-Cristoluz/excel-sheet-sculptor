@@ -7,6 +7,7 @@ import Landing from "./pages/Landing";
 import Index from "./pages/Index";
 import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/app" element={<Index />} />
           <Route path="/install" element={<Install />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

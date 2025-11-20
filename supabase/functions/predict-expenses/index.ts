@@ -1,8 +1,38 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+interface Transaction {
+  tipo: string;
+  valor: number;
+  categoria?: string;
+  mes: string;
+  ano: number;
+}
+
+// Input validation
+const validateInput = (transactions: unknown) => {
+  if (!Array.isArray(transactions)) {
+    throw new Error('Transações devem ser um array');
+  }
+  if (transactions.length > 1000) {
+    throw new Error('Máximo de 1000 transações permitidas');
+  }
+  
+  for (const t of transactions) {
+    if (typeof t.tipo !== 'string' || typeof t.valor !== 'number') {
+      throw new Error('Formato de transação inválido');
+    }
+    if (!isFinite(t.valor) || t.valor < 0) {
+      throw new Error('Valor de transação inválido');
+    }
+  }
+  
+  return transactions as Transaction[];
 };
 
 serve(async (req) => {
@@ -11,13 +41,33 @@ serve(async (req) => {
   }
 
   try {
-    const { transactions } = await req.json();
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Autenticação necessária');
+    }
+
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      throw new Error('Usuário não autenticado');
+    }
+
+    const body = await req.json();
+    const transactions = validateInput(body.transactions);
+
+    console.log(`[${user.id}] Predizendo gastos para ${transactions.length} transações`);
 
     // Analisar histórico de gastos
     const monthlyExpenses: { [key: string]: number } = {};
     const categoryExpenses: { [key: string]: number[] } = {};
 
-    transactions.forEach((t: any) => {
+    transactions.forEach((t) => {
       if (t.tipo.toLowerCase() === 'saída' || t.tipo.toLowerCase() === 'saida') {
         // Por mês
         const monthKey = `${t.mes}-${t.ano}`;
@@ -64,17 +114,19 @@ serve(async (req) => {
       recommendations: generateRecommendations(avgRecent, avgMonthly, trend)
     };
 
+    console.log(`[${user.id}] Predição: R$ ${avgRecent.toFixed(2)} (${trend})`);
+
     return new Response(JSON.stringify(predictions), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
   } catch (error) {
-    console.error('Error in predict-expenses:', error);
+    console.error('Erro:', error);
     return new Response(
       JSON.stringify({ 
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Erro desconhecido'
       }), {
-      status: 500,
+      status: error instanceof Error && error.message.includes('autenticação') ? 401 : 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
