@@ -574,7 +574,7 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="mt-8">
-              <div className="bg-background py-4 pb-8 flex justify-center">
+              <div className="bg-background py-4 flex justify-center">
                 <TabsList className="bg-card border-2 border-primary/20 rounded-2xl p-3 shadow-lg grid grid-cols-3 gap-2 w-fit">
                   <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <BarChart3 className="h-5 w-5 flex-shrink-0" />
@@ -603,7 +603,7 @@ const Index = () => {
                 </TabsList>
               </div>
 
-              <div className="space-y-6 pt-6">
+              <div className="space-y-6 pt-2">
                 <TabsContent value="charts" className="space-y-6 animate-fade-in mt-0">
                   <DataCharts data={filteredData} baseSalary={salary} showValues={showValues} />
                 </TabsContent>
