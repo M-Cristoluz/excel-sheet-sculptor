@@ -178,8 +178,14 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'system-ui', sans-serif;
-    min-height: 100vh;
+    min-height: 100dvh;
     transition: var(--transition-smooth);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html {
+    min-height: 100dvh;
+    -webkit-text-size-adjust: 100%;
   }
 
   h1, h2, h3, h4, h5, h6 {
