@@ -574,31 +574,31 @@ const Index = () => {
             )}
 
             <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6 mt-8">
-              <div className="bg-background/95 backdrop-blur-sm py-4 mb-6 flex justify-center shadow-sm sticky top-0 z-50 border-b border-border/30 overflow-hidden">
-                <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-2 shadow-lg grid grid-cols-3 gap-1.5 w-fit overflow-hidden max-h-[140px]">
-                  <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-2 min-w-[80px] h-[56px] flex-shrink-0 overflow-hidden">
+              <div className="bg-background/95 backdrop-blur-sm py-4 mb-6 flex justify-center shadow-sm sticky top-0 z-50 border-b border-border/30">
+                <TabsList className="bg-card/50 backdrop-blur-sm border-2 border-primary/10 rounded-2xl p-3 shadow-lg grid grid-cols-3 gap-2 w-fit">
+                  <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <BarChart3 className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Gráficos</span>
+                    <span>Gráficos</span>
                   </TabsTrigger>
-                  <TabsTrigger value="comparison" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-2 min-w-[80px] h-[56px] flex-shrink-0 overflow-hidden">
+                  <TabsTrigger value="comparison" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <TrendingUpIcon className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Comparativo</span>
+                    <span>Comparativo</span>
                   </TabsTrigger>
-                  <TabsTrigger value="goals" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-2 min-w-[80px] h-[56px] flex-shrink-0 overflow-hidden">
+                  <TabsTrigger value="goals" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <Target className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Metas</span>
+                    <span>Metas</span>
                   </TabsTrigger>
-                  <TabsTrigger value="debts" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-2 min-w-[80px] h-[56px] flex-shrink-0 overflow-hidden">
+                  <TabsTrigger value="debts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <CreditCard className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Dívidas</span>
+                    <span>Dívidas</span>
                   </TabsTrigger>
-                  <TabsTrigger value="challenges" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-2 min-w-[80px] h-[56px] flex-shrink-0 overflow-hidden">
+                  <TabsTrigger value="challenges" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <Sparkles className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Desafios</span>
+                    <span>Desafios</span>
                   </TabsTrigger>
-                  <TabsTrigger value="table" className="flex flex-col items-center justify-center gap-1 transition-all duration-300 text-xs px-2 py-2 min-w-[80px] h-[56px] flex-shrink-0 overflow-hidden">
+                  <TabsTrigger value="table" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <Table className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Tabela</span>
+                    <span>Tabela</span>
                   </TabsTrigger>
                 </TabsList>
               </div>
