@@ -573,8 +573,8 @@ const Index = () => {
               </div>
             )}
 
-            <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="space-y-6 mt-8">
-              <div className="bg-background py-5 mb-10 flex justify-center shadow-md sticky top-0 z-[100] border-b border-border">
+            <Tabs defaultValue="charts" value={activeTab} onValueChange={setActiveTab} className="mt-8">
+              <div className="bg-background py-4 mb-8 flex justify-center">
                 <TabsList className="bg-card border-2 border-primary/20 rounded-2xl p-3 shadow-lg grid grid-cols-3 gap-2 w-fit">
                   <TabsTrigger value="charts" className="flex flex-col items-center justify-center gap-1.5 transition-all duration-300 text-xs px-3 py-2.5 min-w-[90px]">
                     <BarChart3 className="h-5 w-5 flex-shrink-0" />
@@ -603,29 +603,31 @@ const Index = () => {
                 </TabsList>
               </div>
 
-              <TabsContent value="charts" className="space-y-6 animate-fade-in">
-                <DataCharts data={filteredData} baseSalary={salary} showValues={showValues} />
-              </TabsContent>
+              <div className="space-y-6">
+                <TabsContent value="charts" className="space-y-6 animate-fade-in mt-0">
+                  <DataCharts data={filteredData} baseSalary={salary} showValues={showValues} />
+                </TabsContent>
 
-              <TabsContent value="comparison" className="space-y-6 animate-fade-in">
-                <MonthlyComparison data={uploadedData} />
-              </TabsContent>
+                <TabsContent value="comparison" className="space-y-6 animate-fade-in mt-0">
+                  <MonthlyComparison data={uploadedData} />
+                </TabsContent>
 
-              <TabsContent value="goals" className="space-y-6 animate-fade-in">
-                <GoalsManager />
-              </TabsContent>
+                <TabsContent value="goals" className="space-y-6 animate-fade-in mt-0">
+                  <GoalsManager />
+                </TabsContent>
 
-              <TabsContent value="debts" className="space-y-6 animate-fade-in">
-                <DebtsManager />
-              </TabsContent>
+                <TabsContent value="debts" className="space-y-6 animate-fade-in mt-0">
+                  <DebtsManager />
+                </TabsContent>
 
-              <TabsContent value="challenges" className="space-y-6 animate-fade-in">
-                <WeeklyChallenges />
-              </TabsContent>
+                <TabsContent value="challenges" className="space-y-6 animate-fade-in mt-0">
+                  <WeeklyChallenges />
+                </TabsContent>
 
-              <TabsContent value="table" className="space-y-6 animate-fade-in">
-                <DataTable data={filteredData} onDataChange={handleDataChange} showValues={showValues} />
-              </TabsContent>
+                <TabsContent value="table" className="space-y-6 animate-fade-in mt-0">
+                  <DataTable data={filteredData} onDataChange={handleDataChange} showValues={showValues} />
+                </TabsContent>
+              </div>
             </Tabs>
           </div>
         )}
