@@ -312,7 +312,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen transition-all duration-500 bg-gradient-to-br from-background to-muted/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-[100dvh] flex flex-col transition-all duration-500 bg-gradient-to-br from-background to-muted/20 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Onboarding */}
       {showOnboarding && (
         <Onboarding onComplete={handleCompleteOnboarding} onSkip={handleSkipOnboarding} />
@@ -327,7 +327,7 @@ const Index = () => {
         showBackButton={true}
       />
 
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
+      <main className="container mx-auto px-4 py-8 max-w-7xl flex-1 pb-[calc(2rem+env(safe-area-inset-bottom,0px))]">
         {!hasData ? (
           /* iOS-style Upload Section */
           <div className="space-y-10 animate-fadeIn">
@@ -632,8 +632,8 @@ const Index = () => {
       </main>
 
       {/* Enhanced Footer */}
-      <footer className="border-t mt-16 transition-all duration-500 bg-secondary/50 dark:bg-gray-900/50 dark:backdrop-blur-xl">
-        <div className="container mx-auto px-4 py-8">
+      <footer className="border-t mt-auto transition-all duration-500 bg-secondary/50 dark:bg-gray-900/50 dark:backdrop-blur-xl pb-[env(safe-area-inset-bottom,0px)]">
+        <div className="container mx-auto px-4 py-8 pb-[calc(1rem+env(safe-area-inset-bottom,0px))]">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">
               <p className="text-sm font-semibold text-foreground">© 2025 EduCA$H - Sistema Educativo Financeiro</p>
